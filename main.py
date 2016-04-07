@@ -32,6 +32,22 @@ TERMINAL_VELOCITY = 50
 
 PLAYER_HEIGHT = 2
 
+from objects.default import grass, stone, sand, brick
+grass = grass()
+stone = stone()
+sand = sand()
+brick = brick()
+
+TEXTURE_PATH = 'objects/defaults.png'
+FACES = [
+    ( 0, 1, 0),
+    ( 0,-1, 0),
+    (-1, 0, 0),
+    ( 1, 0, 0),
+    ( 0, 0, 1),
+    ( 0, 0,-1),
+]
+
 def cube_vertices(x, y, z, n):
     """ Return the vertices of the cube at position x, y, z with size 2*n.
 
@@ -44,47 +60,6 @@ def cube_vertices(x, y, z, n):
         x-n,y-n,z+n, x+n,y-n,z+n, x+n,y+n,z+n, x-n,y+n,z+n,  # front
         x+n,y-n,z-n, x-n,y-n,z-n, x-n,y+n,z-n, x+n,y+n,z-n,  # back
     ]
-
-
-def tex_coord(x, y, n=4):
-    """ Return the bounding vertices of the texture square.
-
-    """
-    m = 1.0 / n
-    dx = x * m
-    dy = y * m
-    return dx, dy, dx + m, dy, dx + m, dy + m, dx, dy + m
-
-
-def tex_coords(top, bottom, side):
-    """ Return a list of the texture squares for the top, bottom and side.
-
-    """
-    top = tex_coord(*top)
-    bottom = tex_coord(*bottom)
-    side = tex_coord(*side)
-    result = []
-    result.extend(top)
-    result.extend(bottom)
-    result.extend(side * 4)
-    return result
-
-
-TEXTURE_PATH = 'texture.png'
-
-GRASS = tex_coords((1, 0), (0, 1), (0, 0))
-SAND = tex_coords((1, 1), (1, 1), (1, 1))
-BRICK = tex_coords((2, 0), (2, 0), (2, 0))
-STONE = tex_coords((2, 1), (2, 1), (2, 1))
-
-FACES = [
-    ( 0, 1, 0),
-    ( 0,-1, 0),
-    (-1, 0, 0),
-    ( 1, 0, 0),
-    ( 0, 0, 1),
-    ( 0, 0,-1),
-]
 
 
 def normalize(position):
@@ -158,15 +133,16 @@ class Model(object):
         n = 80  # 1/2 width and height of world
         s = 1  # step size
         y = 0  # initial y height
+
         for x in range(-n, n + 1, s):
             for z in range(-n, n + 1, s):
                 # create a layer stone an grass everywhere.
-                self.add_block((x, y - 2, z), GRASS, immediate=False)
-                self.add_block((x, y - 3, z), STONE, immediate=False)
+                self.add_block((x, y - 2, z), grass, immediate=False)
+                self.add_block((x, y - 3, z), stone, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
                     for dy in range(-2, 3):
-                        self.add_block((x, y + dy, z), STONE, immediate=False)
+                        self.add_block((x, y + dy, z), stone, immediate=False)
 
         # generate the hills randomly
         o = n - 10
@@ -177,7 +153,7 @@ class Model(object):
             h = random.randint(1, 6)  # height of the hill
             s = random.randint(4, 8)  # 2 * s is the side length of the hill
             d = 1  # how quickly to taper off the hills
-            t = random.choice([GRASS, SAND, BRICK])
+            t = random.choice([grass, sand, brick])
             for y in range(c, c + h):
                 for x in range(a - s, a + s + 1):
                     for z in range(b - s, b + s + 1):
@@ -305,7 +281,7 @@ class Model(object):
         else:
             self._enqueue(self._show_block, position, texture)
 
-    def _show_block(self, position, texture):
+    def _show_block(self, position, block):
         """ Private implementation of the `show_block()` method.
 
         Parameters
@@ -319,7 +295,7 @@ class Model(object):
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
-        texture_data = list(texture)
+        texture_data = block.getTexture()
         # create vertex list
         # FIXME Maybe `add_indexed()` should be used instead
         self._shown[position] = self.batch.add(24, GL_QUADS, self.group,
@@ -468,7 +444,7 @@ class Window(pyglet.window.Window):
         self.dy = 0
 
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [BRICK, GRASS, SAND]
+        self.inventory = [brick, grass, sand]
 
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]

@@ -7,7 +7,12 @@ This is so that mods can remove default objects from their game.
 '''
 
 class Block(object):
-    pass
+    unique=False #Objects that don't have unique metadata are a lot easier for our engine to deal with. We only have to instantiate them once, saving ram.
+    texture=None
+    def getTexture(self):
+        return self.texture
+    def destroy(self):
+        pass
 
 class tool(object):
     pass
