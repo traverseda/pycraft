@@ -38,7 +38,7 @@ stone = stone()
 sand = sand()
 brick = brick()
 
-from objects.registry import blockTypes
+from objectRegistry import blockTypes
 
 TEXTURE_PATH = 'objects/defaults.png'
 FACES = [
