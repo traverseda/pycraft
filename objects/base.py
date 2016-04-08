@@ -1,7 +1,7 @@
 '''
 This file should contain only the "base" class for blocks/tools/players/mobs
 
-Essentially, they're abstrace base classes. Put example objects in "default.py".
+Essentially, they're abstract base classes. Put example objects in "default.py".
 
 This is so that mods can remove default objects from their game.
 '''
@@ -16,3 +16,12 @@ class Block(object):
 
 class tool(object):
     pass
+
+#Anyone or anything should be able to have an inventory
+class inventory(object):
+    pass
+
+class mob(object):
+    def __init__(self, *args,**kwargs):
+        super( mob, self ).__init__(*args,**kwargs)
+        
