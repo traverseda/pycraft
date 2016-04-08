@@ -10,6 +10,7 @@ class Block(object):
     unique=False #Objects that don't have unique metadata are a lot easier for our engine to deal with. We only have to instantiate them once, saving ram.
     texture=None
     def getTexture(self):
+        print(self.texture)
         return self.texture
     def destroy(self):
         pass
