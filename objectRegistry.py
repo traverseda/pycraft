@@ -1,11 +1,10 @@
 
-block_types={}
+block_types = {}
+
 
 def register_block(block, name):
-    if hasattr(blockTypes,name):
+    if hasattr(block_types, name):
         print("block with that name already exists") 
     else:
-        blockTypes[name] = block
+        block_types[name] = block
     return block
-
-
