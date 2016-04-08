@@ -3,6 +3,7 @@
 import math
 import random
 import time
+import os
 
 from collections import deque
 from pyglet import image
@@ -11,6 +12,7 @@ from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
 from objects.default import Grass, Stone, Sand, Brick
+from object_registry import block_types
 
 TICKS_PER_SEC = 60
 
@@ -48,6 +50,15 @@ FACES = [
     ( 0, 0, 1),
     ( 0, 0,-1),
 ]
+
+
+def importObjects():
+    for name in os.listdir("objects"):
+        if name.endswith(".py"):
+             module = name[:-3]
+             # set the module name in the current global name space:
+             __import__("objects."+module)
+importObjects()
 
 
 def cube_vertices(x, y, z, n):
