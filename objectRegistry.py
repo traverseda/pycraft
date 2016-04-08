@@ -1,7 +1,7 @@
 
-blockTypes={}
+block_types={}
 
-def registerBlock(block, name):
+def register_block(block, name):
     if hasattr(blockTypes,name):
         print("block with that name already exists") 
     else:
