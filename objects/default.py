@@ -8,6 +8,7 @@ FACES = [
     ( 0, 0,-1),
 ]
 
+
 def tex_coord(x, y, n=4):
     """ Return the bounding vertices of the texture square.
 
@@ -16,6 +17,7 @@ def tex_coord(x, y, n=4):
     dx = x * m
     dy = y * m
     return dx, dy, dx + m, dy, dx + m, dy + m, dx, dy + m
+
 
 def tex_coords(top, bottom, side):
     """ Return a list of the texture squares for the top, bottom and side.
@@ -40,20 +42,20 @@ from objects.base import Block
 from object_registry import register_block
 
 @register_block("grass")
-class grass(Block):
+class Grass(Block):
     texture = GRASS
 
 @register_block("sand")
-class sand(Block):
+class Sand(Block):
     texture = SAND
 
 @register_block("brick")
-class brick(Block):
+class Brick(Block):
     texture = BRICK
 
 @register_block("stone")
-class stone(Block):
+class Stone(Block):
     texture = STONE
+
     def destroy(self):
         pass
-

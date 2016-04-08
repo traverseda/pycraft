@@ -3,12 +3,16 @@
 import math
 import random
 import time
+import os
 
 from collections import deque
 from pyglet import image
 from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
+
+from objects.default import Grass, Stone, Sand, Brick
+from object_registry import block_types
 
 TICKS_PER_SEC = 60
 
@@ -19,7 +23,7 @@ WALKING_SPEED = 5
 FLYING_SPEED = 15
 
 GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
+MAX_JUMP_HEIGHT = 1.0  # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
@@ -32,11 +36,10 @@ TERMINAL_VELOCITY = 50
 
 PLAYER_HEIGHT = 2
 
-from objects.default import grass, stone, sand, brick
-grass = grass()
-stone = stone()
-sand = sand()
-brick = brick()
+grass = Grass()
+stone = Stone()
+sand = Sand()
+brick = Brick()
 
 TEXTURE_PATH = 'objects/defaults.png'
 FACES = [
@@ -48,16 +51,15 @@ FACES = [
     ( 0, 0,-1),
 ]
 
-import os 
-def importObjects(): 
-    for name in os.listdir("objects"): 
-        if name.endswith(".py"): 
-             module = name[:-3] 
-             # set the module name in the current global name space: 
+
+def importObjects():
+    for name in os.listdir("objects"):
+        if name.endswith(".py"):
+             module = name[:-3]
+             # set the module name in the current global name space:
              __import__("objects."+module)
 importObjects()
-from object_registry import block_types
-print(block_types)
+
 
 def cube_vertices(x, y, z, n):
     """ Return the vertices of the cube at position x, y, z with size 2*n.
@@ -88,7 +90,7 @@ def normalize(position):
     """
     x, y, z = position
     x, y, z = (int(round(x)), int(round(y)), int(round(z)))
-    return (x, y, z)
+    return x, y, z
 
 
 def sectorize(position):
@@ -105,10 +107,10 @@ def sectorize(position):
     """
     x, y, z = normalize(position)
     x, y, z = x // SECTOR_SIZE, y // SECTOR_SIZE, z // SECTOR_SIZE
-    return (x, 0, z)
+    return x, 0, z
 
 
-class Model(object):
+class Model:
 
     def __init__(self):
 
@@ -306,10 +308,11 @@ class Model(object):
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
-        texture_data = block.getTexture()
+        texture_data = block.texture
         # create vertex list
         # FIXME Maybe `add_indexed()` should be used instead
-        self._shown[position] = self.batch.add(24, GL_QUADS, self.group,
+        self._shown[position] = self.batch.add(
+            24, GL_QUADS, self.group,
             ('v3f/static', vertex_data),
             ('t2f/static', texture_data))
 
@@ -417,7 +420,7 @@ class Model(object):
 class Window(pyglet.window.Window):
 
     def __init__(self, *args, **kwargs):
-        super(Window, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Whether or not the window exclusively captures the mouse.
         self.exclusive = False
@@ -469,7 +472,8 @@ class Window(pyglet.window.Window):
         self.model = Model()
 
         # The label that is displayed in the top left of the canvas.
-        self.label = pyglet.text.Label('', font_name='Arial', font_size=18,
+        self.label = pyglet.text.Label(
+            '', font_name='Arial', font_size=18,
             x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
             color=(0, 0, 0, 255))
 
@@ -482,7 +486,7 @@ class Window(pyglet.window.Window):
         the game will ignore the mouse.
 
         """
-        super(Window, self).set_exclusive_mouse(exclusive)
+        super().set_exclusive_mouse(exclusive)
         self.exclusive = exclusive
 
     def get_sight_vector(self):
@@ -500,7 +504,7 @@ class Window(pyglet.window.Window):
         dy = math.sin(math.radians(y))
         dx = math.cos(math.radians(x - 90)) * m
         dz = math.sin(math.radians(x - 90)) * m
-        return (dx, dy, dz)
+        return dx, dy, dz
 
     def get_motion_vector(self):
         """ Returns the current motion vector indicating the velocity of the
@@ -539,7 +543,7 @@ class Window(pyglet.window.Window):
             dy = 0.0
             dx = 0.0
             dz = 0.0
-        return (dx, dy, dz)
+        return dx, dy, dz
 
     def update(self, dt):
         """ This method is scheduled to be called repeatedly by the pyglet
@@ -575,7 +579,7 @@ class Window(pyglet.window.Window):
         """
         # walking
         speed = FLYING_SPEED if self.flying else WALKING_SPEED
-        d = dt * speed # distance covered this tick.
+        d = dt * speed  # distance covered this tick.
         dx, dy, dz = self.get_motion_vector()
         # New position in space, before accounting for gravity.
         dx, dy, dz = dx * d, dy * d, dz * d
