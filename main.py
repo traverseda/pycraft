@@ -10,6 +10,8 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
+from objects.default import Grass, Stone, Sand, Brick
+
 TICKS_PER_SEC = 60
 
 # Size of sectors used to ease block loading.
@@ -19,7 +21,7 @@ WALKING_SPEED = 5
 FLYING_SPEED = 15
 
 GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
+MAX_JUMP_HEIGHT = 1.0  # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
@@ -32,7 +34,6 @@ TERMINAL_VELOCITY = 50
 
 PLAYER_HEIGHT = 2
 
-from objects.default import Grass, Stone, Sand, Brick
 grass = Grass()
 stone = Stone()
 sand = Sand()
@@ -98,7 +99,7 @@ def sectorize(position):
     return x, 0, z
 
 
-class Model(object):
+class Model:
 
     def __init__(self):
 
@@ -408,7 +409,7 @@ class Model(object):
 class Window(pyglet.window.Window):
 
     def __init__(self, *args, **kwargs):
-        super(Window, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         # Whether or not the window exclusively captures the mouse.
         self.exclusive = False
@@ -474,7 +475,7 @@ class Window(pyglet.window.Window):
         the game will ignore the mouse.
 
         """
-        super(Window, self).set_exclusive_mouse(exclusive)
+        super().set_exclusive_mouse(exclusive)
         self.exclusive = exclusive
 
     def get_sight_vector(self):
@@ -567,7 +568,7 @@ class Window(pyglet.window.Window):
         """
         # walking
         speed = FLYING_SPEED if self.flying else WALKING_SPEED
-        d = dt * speed # distance covered this tick.
+        d = dt * speed  # distance covered this tick.
         dx, dy, dz = self.get_motion_vector()
         # New position in space, before accounting for gravity.
         dx, dy, dz = dx * d, dy * d, dz * d
