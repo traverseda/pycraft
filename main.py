@@ -296,7 +296,7 @@ class Model(object):
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
-        texture_data = block.get_texture()
+        texture_data = block.texture
         # create vertex list
         # FIXME Maybe `add_indexed()` should be used instead
         self._shown[position] = self.batch.add(

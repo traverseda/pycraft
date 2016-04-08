@@ -17,13 +17,7 @@ class Block:
     unique = False
     texture = None
 
-    def get_texture(self):
-        return self.texture
-
     def destroy(self):
-        pass
-
-    def get_id(self):
         pass
 
 
