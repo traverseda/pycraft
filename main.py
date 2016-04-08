@@ -38,8 +38,6 @@ stone = stone()
 sand = sand()
 brick = brick()
 
-from objectRegistry import blockTypes
-
 TEXTURE_PATH = 'objects/defaults.png'
 FACES = [
     ( 0, 1, 0),
@@ -49,6 +47,17 @@ FACES = [
     ( 0, 0, 1),
     ( 0, 0,-1),
 ]
+
+import os 
+def importObjects(): 
+    for name in os.listdir("objects"): 
+        if name.endswith(".py"): 
+             module = name[:-3] 
+             # set the module name in the current global name space: 
+             __import__("objects."+module)
+importObjects()
+from object_registry import block_types
+print(block_types)
 
 def cube_vertices(x, y, z, n):
     """ Return the vertices of the cube at position x, y, z with size 2*n.

@@ -37,16 +37,21 @@ STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 
 from objects.base import Block
+from object_registry import register_block
 
+@register_block("grass")
 class grass(Block):
     texture = GRASS
 
+@register_block("sand")
 class sand(Block):
     texture = SAND
 
+@register_block("brick")
 class brick(Block):
     texture = BRICK
 
+@register_block("stone")
 class stone(Block):
     texture = STONE
     def destroy(self):
