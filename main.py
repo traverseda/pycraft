@@ -11,6 +11,14 @@ from pyglet.gl import *
 from pyglet.graphics import TextureGroup
 from pyglet.window import key, mouse
 
+# Python implementation:
+from noise.perlin import SimplexNoise
+simplex_noise2 = SimplexNoise(256).noise2
+
+# C implementation, but no randomization:
+# from noise import snoise2 as simplex_noise2
+
+
 from objects.default import Grass, Stone, Sand, Brick
 from object_registry import block_types
 
@@ -150,32 +158,19 @@ class Model:
         for x in range(-n, n + 1, s):
             for z in range(-n, n + 1, s):
                 # create a layer stone an grass everywhere.
-                self.add_block((x, y - 2, z), grass, immediate=False)
                 self.add_block((x, y - 3, z), stone, immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
                     for dy in range(-2, 3):
                         self.add_block((x, y + dy, z), stone, immediate=False)
-
-        # generate the hills randomly
-        o = n - 10
-        for _ in range(120):
-            a = random.randint(-o, o)  # x position of the hill
-            b = random.randint(-o, o)  # z position of the hill
-            c = -1  # base of the hill
-            h = random.randint(1, 6)  # height of the hill
-            s = random.randint(4, 8)  # 2 * s is the side length of the hill
-            d = 1  # how quickly to taper off the hills
-            t = random.choice([grass, sand, brick])
-            for y in range(c, c + h):
-                for x in range(a - s, a + s + 1):
-                    for z in range(b - s, b + s + 1):
-                        if (x - a) ** 2 + (z - b) ** 2 > (s + 1) ** 2:
-                            continue
-                        if (x - 0) ** 2 + (z - 0) ** 2 < 5 ** 2:
-                            continue
-                        self.add_block((x, y, z), t, immediate=False)
-                s -= d  # decrement side lenth so hills taper off
+                else:
+                    y_max = int((simplex_noise2(x/30, z/30) + 1) * 3)
+                    for y_lvl in range(y - 2, y_max):
+                        if y_lvl < (y_max-1):
+                            block = brick
+                        else:
+                            block = grass
+                        self.add_block((x, y_lvl, z), block, immediate=False)
 
     def hit_test(self, position, vector, max_distance=8):
         """ Line of sight search from current position. If a block is
@@ -438,7 +433,7 @@ class Window(pyglet.window.Window):
 
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
-        self.position = (0, 0, 0)
+        self.position = (0, 5, 0)
 
         # First element is rotation of the player in the x-z plane (ground
         # plane) measured from the z-axis down. The second is the rotation
