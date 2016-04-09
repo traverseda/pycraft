@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(
-    name='PyCraft',
+    name='pycraft',
     version='0.1',
     description='PyCraft',
     packages=['pycraft'],
