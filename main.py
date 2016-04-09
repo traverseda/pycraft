@@ -19,8 +19,8 @@ simplex_noise2 = SimplexNoise(256).noise2
 # from noise import snoise2 as simplex_noise2
 
 
-from objects.default import Grass, Stone, Sand, Brick
-from object_registry import block_types
+from pycraft.objects.default import Grass, Stone, Sand, Brick
+from pycraft.object_registry import block_types
 
 TICKS_PER_SEC = 60
 
@@ -49,7 +49,7 @@ stone = Stone()
 sand = Sand()
 brick = Brick()
 
-TEXTURE_PATH = 'objects/defaults.png'
+TEXTURE_PATH = 'pycraft/objects/defaults.png'
 FACES = [
     ( 0, 1, 0),
     ( 0,-1, 0),
@@ -61,11 +61,11 @@ FACES = [
 
 
 def importObjects():
-    for name in os.listdir("objects"):
+    for name in os.listdir("pycraft/objects"):
         if name.endswith(".py"):
              module = name[:-3]
              # set the module name in the current global name space:
-             __import__("objects."+module)
+             __import__("pycraft.objects."+module)
 importObjects()
 
 
