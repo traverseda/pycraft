@@ -1,3 +1,5 @@
+##Overview
+
 A fork of [foglemans "Minecfraft" repo](https://github.com/fogleman/Minecraft), intended to be more agressive in implementing new features, and sacrificing some of what makes the original good for teaching.
 
 I plan to be very permissive in accepting pull-requests. The original had a ton
@@ -10,6 +12,20 @@ similar to [GURPS](https://en.wikipedia.org/wiki/GURPS), but we're a long way of
 
 >The Generic Universal RolePlaying System, or GURPS, is a tabletop role-playing
 game system designed to allow for play in any game setting.
+
+##Features
+
+This is still a very early project, and doesn't offer much over the original "minecraft in 500 lines" project.
+
+So far, we have
+
+ * python > 3.5 only (excpect to see us taking advantage of async/await)
+
+ * Super simple perlin noise terrain generator
+
+ * The start of an object-oriented blocks system (check out objects/default.py)
+
+ * Permissive policy on pull requests 
 
 ## How to Play
 
