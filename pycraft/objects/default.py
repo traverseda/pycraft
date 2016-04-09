@@ -38,8 +38,8 @@ BRICK = tex_coords((2, 0), (2, 0), (2, 0))
 STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 
-from objects.base import Block
-from object_registry import register_block
+from .base import Block
+from ..object_registry import register_block
 
 @register_block("grass")
 class Grass(Block):
