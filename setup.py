@@ -1,6 +1,4 @@
-#!/usr/bin/env python
-
-from distutils.core import setup
+from setuptools import setup
 
 setup(
     name='pycraft',
@@ -9,6 +7,14 @@ setup(
     packages=['pycraft'],
     install_requires=[
         'pyglet',
-        'noise',
+        'noise'
     ],
+    extras_require={
+        'test': ['pytest', 'mock', 'coverage']
+    },
+    entry_points={
+        'console_scripts': [
+            'pycraft=pycraft.main:main'
+        ]
+    }
 )
