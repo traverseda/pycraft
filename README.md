@@ -13,6 +13,8 @@ similar to [GURPS](https://en.wikipedia.org/wiki/GURPS), but we're a long way of
 >The Generic Universal RolePlaying System, or GURPS, is a tabletop role-playing
 game system designed to allow for play in any game setting.
 
+#### #pycraft on freenode
+
 ![](screenshot.png "")
 
 ## Features
