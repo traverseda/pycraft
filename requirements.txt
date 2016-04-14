@@ -1,2 +1,2 @@
-pyglet
-noise
+noise==1.2.2
+pyglet==1.2.4
