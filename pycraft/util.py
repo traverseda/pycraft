@@ -13,6 +13,17 @@ def cube_vertices(x, y, z, n):
         x+n,y-n,z-n, x-n,y-n,z-n, x-n,y+n,z-n, x+n,y+n,z-n,  # back
     ]
 
+def cube_shade(x, y, z, n):
+    """Return the color diference between the sides of the cube."""
+    return [
+        1.0,1.0,1.0,1.0,1.0,1.0, 1.0,1.0,1.0, 1.0,1.0,1.0,  # top
+        0.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,0.0, 0.0,0.0,0.0,  # bottom
+        0.5,0.5,0.5, 0.5,0.5,0.5, 0.5,0.5,0.5, 0.5,0.5,0.5,  # left
+        0.8,0.8,0.8, 0.8,0.8,0.8, 0.8,0.8,0.8, 0.8,0.8,0.8,  # right
+        0.5,0.5,0.5, 0.5,0.5,0.5, 0.5,0.5,0.5, 0.5,0.5,0.5,  # front
+        0.8,0.8,0.8, 0.8,0.8,0.8, 0.8,0.8,0.8, 0.8,0.8,0.8,  # back
+    ]
+
 def normalize(position):
     """Accepts `position` of arbitrary precision and returns the block
     containing that position.
