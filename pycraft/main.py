@@ -1,5 +1,8 @@
 import pyglet.app
 
+import os, sys
+sys.path.append(os.path.join(os.path.dirname(__file__), "../"))
+
 from pycraft.window import Window
 from pycraft.world import World
 from pycraft.player import Player
@@ -23,3 +26,5 @@ def main():
     player = Player()
     window.set_player(player)
     pyglet.app.run()
+
+main()

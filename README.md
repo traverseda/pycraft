@@ -13,6 +13,18 @@ similar to [GURPS](https://en.wikipedia.org/wiki/GURPS), but we're a long way of
 >The Generic Universal RolePlaying System, or GURPS, is a tabletop role-playing
 game system designed to allow for play in any game setting.
 
+##Running pycraft
+
+run
+ 
+    python3 pycraft/main.py
+
+If it throws errors, you might be missing some libraries. Try
+
+    sudo pip3 install -r requirements.txt
+
+If you're still getting error, open an issue.
+
 #### #pycraft on freenode
 
 ![](screenshot.png "")
