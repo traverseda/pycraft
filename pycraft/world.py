@@ -8,7 +8,8 @@ from pyglet.graphics import Batch, TextureGroup
 from pyglet.window import mouse
 
 from pycraft.objects.object import WorldObjectRegistry
-from pycraft.util import normalize, sectorize, cube_vertices
+from pycraft.util import normalize, sectorize, cube_vertices, cube_shade
+from pycraft.shader import Shader
 
 simplex_noise2 = SimplexNoise(256).noise2
 
@@ -47,11 +48,14 @@ class World:
         self.sector = None
         # Mapping from sector to a list of positions inside that sector.
         self.sectors = {}
+
+        self.shader = None
         # Simple function queue implementation. The queue is populated with
         # _show_block() and _hide_block() calls
         self.queue = deque()
         self.init_gl()
         self._initialize()
+        self.init_shader()
 
     def init_gl(self):
         """Basic OpenGL configuration."""
@@ -231,10 +235,12 @@ class World:
         """
         x, y, z = position
         vertex_data = cube_vertices(x, y, z, 0.5)
+        shade_data = cube_shade(1, 1, 1, 1)
         texture_data = block.texture
         self._shown[position] = self.batch.add(
             24, GL_QUADS, self.group,
             ('v3f/static', vertex_data),
+            ('c3f/static', shade_data),
             ('t2f/static', texture_data))
 
     def hide_block(self, position, immediate=True):
@@ -323,3 +329,21 @@ class World:
         """Process the entire queue with no breaks."""
         while self.queue:
             self._dequeue()
+
+    def init_shader(self):
+        vertex_shader = ""
+        fragment_shader = ""
+
+        with open("pycraft/shaders/world.vert") as handle:
+            vertex_shader = handle.read()
+
+        with open("pycraft/shaders/world.frag") as handle:
+            fragment_shader = handle.read()
+
+        self.shader = Shader([vertex_shader], [fragment_shader])
+
+    def start_shader(self):
+        self.shader.bind()
+
+    def stop_shader(self):
+        self.shader.unbind()
