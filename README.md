@@ -1,3 +1,9 @@
+# PyCraft
+
+[![#pycraft on freenode](
+  https://img.shields.io/badge/chat-on%20freenode-brightgreen.svg
+)](https://kiwiirc.com/client/irc.freenode.net/#pycraft)
+
 ## Overview
 
 A fork of [foglemans "Minecraft" repo](https://github.com/fogleman/Minecraft), intended to be more aggressive in implementing new features and sacrificing some of what makes the original good for teaching.
@@ -13,28 +19,41 @@ similar to [GURPS](https://en.wikipedia.org/wiki/GURPS), but we're a long way of
 >The Generic Universal RolePlaying System, or GURPS, is a tabletop role-playing
 game system designed to allow for play in any game setting.
 
-#### #pycraft on freenode
+## Screenshot
 
 ![](screenshot.png "")
 
-##Running
+## Virtual Environment (Recommended)
 
-```
-# virtual environment (recommended)
-virtualenv -p python3 ~/.venv/pycraft` # (or wherever)
+```bash
+# create a virtual environment
+virtualenv -p python3 ~/.venv/pycraft # (or wherever)
+# you may need to add execute permissions
+chmod -R a+x ~/.venv
+# activate
 . ~/.venv/pycraft/bin/activate # on mac
 . ~/.venv/pycraft/Scripts/activate # on windows
+# deactivate (when you're done)
+deactivate
+```
 
-# pip
+## Installing
+
+```bash
 pip install -r requirements-dev.txt
+```
 
-# option 1:
+**option 1:**
+```bash
 python setup.py develop
+# or: python3 setup.py develop
 pycraft
+```
 
-# option 2:
+**option 2:**
+```bash
 python -m pycraft
-
+# or: python3 -m pycraft
 ```
 
 ## Features
@@ -42,18 +61,14 @@ python -m pycraft
 This is still a very early project and doesn't offer much over the original "minecraft in 500 lines" project.
 
 So far, we have
-
  * python > 3.5 only (expect to see us taking advantage of async/await)
-
  * Super simple perlin noise terrain generator
-
- * The start of an object-oriented blocks system (check out objects/default.py)
-
+ * The start of an object-oriented blocks system (check out pycraft/objects)
  * Permissive policy on pull requests
 
 ## How to Play
 
-#### Moving
+### Moving
 
 - W: forward
 - S: back
@@ -63,7 +78,7 @@ So far, we have
 - Space: jump
 - Tab: toggle flying mode
 
-#### Building
+### Building
 
 - Selecting the type of block to create:
     - 1: brick
@@ -72,6 +87,6 @@ So far, we have
 - Mouse left-click: remove block
 - Mouse right-click: create block
 
-#### Quitting
+### Quitting
 
 - ESC: release mouse, then close window
