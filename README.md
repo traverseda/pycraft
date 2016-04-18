@@ -17,6 +17,26 @@ game system designed to allow for play in any game setting.
 
 ![](screenshot.png "")
 
+##Running
+
+```
+# virtual environment (recommended)
+virtualenv -p python3 ~/.venv/pycraft` # (or wherever)
+. ~/.venv/pycraft/bin/activate # on mac
+. ~/.venv/pycraft/Scripts/activate # on windows
+
+# pip
+pip install -r requirements-dev.txt
+
+# option 1:
+python setup.py develop
+pycraft
+
+# option 2:
+python -m pycraft
+
+```
+
 ## Features
 
 This is still a very early project and doesn't offer much over the original "minecraft in 500 lines" project.
