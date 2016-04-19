@@ -1,6 +1,5 @@
-from pycraft.objects.object import WorldObject, WorldObjectRegistry
+from pycraft.objects.object import WorldObject
 
-objects = WorldObjectRegistry('enemies')
 
 class Enemy(WorldObject):
     pass

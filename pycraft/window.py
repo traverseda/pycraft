@@ -6,7 +6,7 @@ import pyglet.window
 from pyglet.gl import *
 from pyglet.window import key, mouse
 
-from pycraft.objects.object import WorldObjectRegistry
+from pycraft.objects import brick, grass, sand, stone
 from pycraft.util import sectorize, cube_vertices
 import pycraft.settings as settings
 
@@ -17,12 +17,6 @@ NUMERIC_KEYS = [
     key._1, key._2, key._3, key._4, key._5,
     key._6, key._7, key._8, key._9, key._0
 ]
-
-world_objects = WorldObjectRegistry()
-brick = world_objects.get('blocks.brick')
-grass = world_objects.get('blocks.grass')
-sand = world_objects.get('blocks.sand')
-stone = world_objects.get('blocks.stone')
 
 
 class Window(pyglet.window.Window):
@@ -117,13 +111,22 @@ class Window(pyglet.window.Window):
         modifiers : int
             Number representing any modifying keys that were pressed.
         """
-        if symbol == key.W: self.player.strafe_forward()
-        elif symbol == key.S: self.player.strafe_backward()
-        elif symbol == key.D: self.player.strafe_right()
-        elif symbol == key.A: self.player.strafe_left()
-        elif symbol == key.SPACE: self.player.jump()
-        elif symbol == key.ESCAPE: self.set_exclusive_mouse(False)
-        elif symbol == key.TAB: self.player.fly()
+        if symbol == key.W:
+            self.player.strafe_forward()
+        elif symbol == key.S:
+            self.player.strafe_backward()
+        elif symbol == key.D:
+            self.player.strafe_right()
+        elif symbol == key.A:
+            self.player.strafe_left()
+        elif symbol == key.SPACE:
+            self.player.jump()
+        elif symbol == key.LSHIFT:
+            self.player.strafe_down()
+        elif symbol == key.ESCAPE:
+            self.set_exclusive_mouse(False)
+        elif symbol == key.TAB:
+            self.player.fly()
         elif symbol in NUMERIC_KEYS:
             self.player.switch_inventory(symbol - NUMERIC_KEYS[0])
 
@@ -138,10 +141,18 @@ class Window(pyglet.window.Window):
         modifiers : int
             Number representing any modifying keys that were pressed.
         """
-        if symbol == key.W: self.player.strafe_backward()
-        elif symbol == key.S: self.player.strafe_forward()
-        elif symbol == key.A: self.player.strafe_right()
-        elif symbol == key.D: self.player.strafe_left()
+        if symbol == key.W:
+            self.player.strafe_backward()
+        elif symbol == key.S:
+            self.player.strafe_forward()
+        elif symbol == key.A:
+            self.player.strafe_right()
+        elif symbol == key.D:
+            self.player.strafe_left()
+        elif symbol == key.SPACE:
+            self.player.strafe_down()
+        elif symbol == key.LSHIFT:
+            self.player.strafe_up()
 
     def on_resize(self, width, height):
         """Called when the window is resized to a new `width` and `height`."""
@@ -153,8 +164,9 @@ class Window(pyglet.window.Window):
         x, y = self.width // 2, self.height // 2
         n = 10
         self.reticle = pyglet.graphics.vertex_list(4,
-            ('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
-        )
+                                                   ('v2i', (x - n, y, x + n,
+                                                            y, x, y - n, x, y + n))
+                                                   )
 
     def on_draw(self):
         """Called by pyglet to draw the canvas."""

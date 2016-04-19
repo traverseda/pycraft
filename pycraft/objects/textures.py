@@ -5,6 +5,7 @@ def tex_coord(x, y, n=4):
     dy = y * m
     return dx, dy, dx + m, dy, dx + m, dy + m, dx, dy + m
 
+
 def tex_coords(top, bottom, side):
     top = tex_coord(*top)
     bottom = tex_coord(*bottom)

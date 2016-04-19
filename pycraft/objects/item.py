@@ -1,6 +1,5 @@
-from pycraft.objects.object import WorldObject, WorldObjectRegistry
+from pycraft.objects.object import WorldObject
 
-objects = WorldObjectRegistry('items')
 
 class Item(WorldObject):
     pass

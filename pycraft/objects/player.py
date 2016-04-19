@@ -1,11 +1,12 @@
 import math
 
-from pycraft.objects.object import WorldObjectRegistry
-from pycraft.util import normalize
+from .block import Brick, Grass, Sand
+from .object import WorldObject
+from ..util import normalize
 
 PLAYER_HEIGHT = 2
 GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
+MAX_JUMP_HEIGHT = 2.0  # About the height of two blocks.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
@@ -18,21 +19,16 @@ TERMINAL_VELOCITY = 50
 WALKING_SPEED = 5
 FLYING_SPEED = 15
 FACES = [
-    ( 0, 1, 0),
-    ( 0,-1, 0),
+    (0, 1, 0),
+    (0, -1, 0),
     (-1, 0, 0),
-    ( 1, 0, 0),
-    ( 0, 0, 1),
-    ( 0, 0,-1),
+    (1, 0, 0),
+    (0, 0, 1),
+    (0, 0, -1),
 ]
 
-world_objects = WorldObjectRegistry()
-brick = world_objects.get('blocks.brick')
-grass = world_objects.get('blocks.grass')
-sand = world_objects.get('blocks.sand')
 
-
-class Player:
+class Player(WorldObject):
 
     def __init__(self):
         # When flying gravity has no effect and speed is increased.
@@ -44,6 +40,9 @@ class Player:
         # otherwise. The second element is -1 when moving left, 1 when moving
         # right, and 0 otherwise.
         self.strafe = [0, 0]
+        # This is strafing in the absolute up/down position, not
+        # relative to where the player is facing. 1 when moving up, -1 when moving down
+        self.strafe_z = 0
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
         self.position = (0, 5, 0)
@@ -57,7 +56,7 @@ class Player:
         # Velocity in the y (upward) direction.
         self.dy = 0
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [brick, grass, sand]
+        self.inventory = [Brick, Grass, Sand]
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
@@ -73,11 +72,26 @@ class Player:
     def strafe_left(self):
         self.strafe[1] -= 1
 
+    def strafe_up(self):
+        if self.flying:
+            self.strafe_z += 1
+
+    def strafe_down(self):
+        if self.flying:
+            self.strafe_z -= 1;
+
     def jump(self):
-        if self.dy == 0: self.dy = JUMP_SPEED
+        """Increases vertical velocity, if grounded. If flying, moves upwards"""
+        if self.flying:
+            self.strafe_up()
+        else:
+            if self.dy == 0:
+                self.dy = JUMP_SPEED
 
     def fly(self):
+        """Toggles flying mode"""
         self.flying = not self.flying
+        self.strafe_z = 0
 
     def switch_inventory(self, index):
         self.block = self.inventory[index % len(self.inventory)]
@@ -134,6 +148,7 @@ class Player:
             dy = 0.0
             dx = 0.0
             dz = 0.0
+        dy += self.strafe_z
         return dx, dy, dz
 
     def update(self, dt, objects):
@@ -161,14 +176,15 @@ class Player:
             dy += self.dy * dt
         # collisions
         x, y, z = self.position
-        x, y, z = self.collide((x + dx, y + dy, z + dz), PLAYER_HEIGHT, objects)
+        x, y, z = self.collide((x + dx, y + dy, z + dz),
+                               PLAYER_HEIGHT, objects)
         self.position = (x, y, z)
 
     def collide(self, position, height, objects):
         """Checks to see if the player at the given `position` and `height`
         is colliding with any blocks in the world.
 
-        Parameters
+        Parametesrs
         ----------
         position : tuple of len 3
             The (x, y, z) position to check for collisions at.
