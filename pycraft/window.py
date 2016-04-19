@@ -109,13 +109,20 @@ class Window(pyglet.window.Window):
         modifiers : int
             Number representing any modifying keys that were pressed.
         """
-        if symbol == key.W: self.player.strafe_forward()
-        elif symbol == key.S: self.player.strafe_backward()
-        elif symbol == key.D: self.player.strafe_right()
-        elif symbol == key.A: self.player.strafe_left()
-        elif symbol == key.SPACE: self.player.jump()
-        elif symbol == key.ESCAPE: self.set_exclusive_mouse(False)
-        elif symbol == key.TAB: self.player.fly()
+        if symbol == key.W:
+            self.player.strafe_forward()
+        elif symbol == key.S:
+            self.player.strafe_backward()
+        elif symbol == key.D:
+            self.player.strafe_right()
+        elif symbol == key.A:
+            self.player.strafe_left()
+        elif symbol == key.SPACE:
+            self.player.jump()
+        elif symbol == key.ESCAPE:
+            self.set_exclusive_mouse(False)
+        elif symbol == key.TAB:
+            self.player.fly()
         elif symbol in NUMERIC_KEYS:
             self.player.switch_inventory(symbol - NUMERIC_KEYS[0])
 
@@ -130,10 +137,14 @@ class Window(pyglet.window.Window):
         modifiers : int
             Number representing any modifying keys that were pressed.
         """
-        if symbol == key.W: self.player.strafe_backward()
-        elif symbol == key.S: self.player.strafe_forward()
-        elif symbol == key.A: self.player.strafe_right()
-        elif symbol == key.D: self.player.strafe_left()
+        if symbol == key.W:
+            self.player.strafe_backward()
+        elif symbol == key.S:
+            self.player.strafe_forward()
+        elif symbol == key.A:
+            self.player.strafe_right()
+        elif symbol == key.D:
+            self.player.strafe_left()
 
     def on_resize(self, width, height):
         """Called when the window is resized to a new `width` and `height`."""
@@ -145,8 +156,9 @@ class Window(pyglet.window.Window):
         x, y = self.width // 2, self.height // 2
         n = 10
         self.reticle = pyglet.graphics.vertex_list(4,
-            ('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
-        )
+                                                   ('v2i', (x - n, y, x + n,
+                                                            y, x, y - n, x, y + n))
+                                                   )
 
     def on_draw(self):
         """Called by pyglet to draw the canvas."""

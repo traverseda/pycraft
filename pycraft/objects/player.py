@@ -1,12 +1,12 @@
 import math
 
-from pycraft.objects import brick, grass, sand
-from pycraft.objects.object import WorldObject
-from pycraft.util import normalize
+from .block import brick, grass, sand
+from .object import WorldObject
+from .util import normalize
 
 PLAYER_HEIGHT = 2
 GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 2.0 # About the height of two blocks.
+MAX_JUMP_HEIGHT = 2.0  # About the height of two blocks.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
@@ -19,12 +19,12 @@ TERMINAL_VELOCITY = 50
 WALKING_SPEED = 5
 FLYING_SPEED = 15
 FACES = [
-    ( 0, 1, 0),
-    ( 0,-1, 0),
+    (0, 1, 0),
+    (0, -1, 0),
     (-1, 0, 0),
-    ( 1, 0, 0),
-    ( 0, 0, 1),
-    ( 0, 0,-1),
+    (1, 0, 0),
+    (0, 0, 1),
+    (0, 0, -1),
 ]
 
 
@@ -71,7 +71,8 @@ class Player(WorldObject):
 
     def jump(self):
         """Increases vertical velocity, if grounded"""
-        if self.dy == 0: self.dy = JUMP_SPEED
+        if self.dy == 0:
+            self.dy = JUMP_SPEED
 
     def fly(self):
         """Toggles flying mode"""
@@ -159,7 +160,8 @@ class Player(WorldObject):
             dy += self.dy * dt
         # collisions
         x, y, z = self.position
-        x, y, z = self.collide((x + dx, y + dy, z + dz), PLAYER_HEIGHT, objects)
+        x, y, z = self.collide((x + dx, y + dy, z + dz),
+                               PLAYER_HEIGHT, objects)
         self.position = (x, y, z)
 
     def collide(self, position, height, objects):

@@ -1,0 +1,8 @@
+# Add some data here
+blocks:
+  grass:
+    properties:
+      texture:
+        top: [1, 0]
+        bottom: [0, 1]
+        side: [0, 0]

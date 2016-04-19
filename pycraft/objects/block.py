@@ -1,5 +1,5 @@
-from pycraft.objects.object import WorldObject
-from pycraft.objects.textures import tex_coords
+from .object import WorldObject
+from .textures import tex_coords
 
 GRASS = tex_coords((1, 0), (0, 1), (0, 0))
 SAND = tex_coords((1, 1), (1, 1), (1, 1))

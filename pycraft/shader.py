@@ -13,6 +13,7 @@ from pyglet.gl import *
 class Shader:
     # vert, frag and geom take arrays of source strings
     # the arrays will be concatenated into one string by OpenGL
+
     def __init__(self, vert=None, frag=None, geom=None):
         vert = vert if vert else []
         frag = frag if frag else []
@@ -47,10 +48,12 @@ class Shader:
             shaderstrings.append(bytes(string, 'ascii'))
 
         # convert the source strings into a ctypes pointer-to-char array, and upload them
-        # this is deep, dark, dangerous black magic - don't try stuff like this at home!
+        # this is deep, dark, dangerous black magic - don't try stuff like this
+        # at home!
         src = (c_char_p * count)(*shaderstrings)
 
-        glShaderSource(shader, count, cast(pointer(src), POINTER(POINTER(c_char))), None)
+        glShaderSource(shader, count, cast(
+            pointer(src), POINTER(POINTER(c_char))), None)
 
         # compile the shader
         glCompileShader(shader)
