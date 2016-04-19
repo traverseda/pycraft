@@ -5,7 +5,7 @@ from pycraft.util import normalize
 
 PLAYER_HEIGHT = 2
 GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 1.0 # About the height of a block.
+MAX_JUMP_HEIGHT = 1.0  # About the height of a block.
 # To derive the formula for calculating jump speed, first solve
 #    v_t = v_0 + a * t
 # for the time at which you achieve maximum height, where a is the acceleration
@@ -18,12 +18,12 @@ TERMINAL_VELOCITY = 50
 WALKING_SPEED = 5
 FLYING_SPEED = 15
 FACES = [
-    ( 0, 1, 0),
-    ( 0,-1, 0),
+    (0, 1, 0),
+    (0, -1, 0),
     (-1, 0, 0),
-    ( 1, 0, 0),
-    ( 0, 0, 1),
-    ( 0, 0,-1),
+    (1, 0, 0),
+    (0, 0, 1),
+    (0, 0, -1),
 ]
 
 world_objects = WorldObjectRegistry()
@@ -74,7 +74,8 @@ class Player:
         self.strafe[1] -= 1
 
     def jump(self):
-        if self.dy == 0: self.dy = JUMP_SPEED
+        if self.dy == 0:
+            self.dy = JUMP_SPEED
 
     def fly(self):
         self.flying = not self.flying
@@ -161,7 +162,8 @@ class Player:
             dy += self.dy * dt
         # collisions
         x, y, z = self.position
-        x, y, z = self.collide((x + dx, y + dy, z + dz), PLAYER_HEIGHT, objects)
+        x, y, z = self.collide((x + dx, y + dy, z + dz),
+                               PLAYER_HEIGHT, objects)
         self.position = (x, y, z)
 
     def collide(self, position, height, objects):

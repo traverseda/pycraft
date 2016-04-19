@@ -1,4 +1,4 @@
-from pycraft.objects.block import Brick, Grass, Sand, Stone
+from .block import Brick, Grass, Sand, Stone
 
 brick = Brick()
 grass = Grass()

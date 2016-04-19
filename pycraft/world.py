@@ -15,12 +15,12 @@ simplex_noise2 = SimplexNoise(256).noise2
 
 TEXTURE_PATH = 'pycraft/objects/textures.png'
 FACES = [
-    ( 0, 1, 0),
-    ( 0,-1, 0),
+    (0, 1, 0),
+    (0, -1, 0),
     (-1, 0, 0),
-    ( 1, 0, 0),
-    ( 0, 0, 1),
-    ( 0, 0,-1),
+    (1, 0, 0),
+    (0, 0, 1),
+    (0, 0, -1),
 ]
 
 
@@ -97,9 +97,9 @@ class World:
                     for dy in range(-2, 3):
                         self.add_block((x, y + dy, z), stone, immediate=False)
                 else:
-                    y_max = int((simplex_noise2(x/30, z/30) + 1) * 3)
+                    y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
                     for y_lvl in range(y - 2, y_max):
-                        if y_lvl < (y_max-1):
+                        if y_lvl < (y_max - 1):
                             block = brick
                         else:
                             block = grass

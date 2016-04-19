@@ -9,6 +9,7 @@ WINDOW_CAPTION = 'PyCraft'
 WINDOW_RESIZEABLE = True
 WINDOW_EXCLUSIVE_MOUSE = True
 
+
 def main():
     window = Window(
         width=WINDOW_DIMENSIONS[0],
