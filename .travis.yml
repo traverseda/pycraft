@@ -6,7 +6,10 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
+  - pip install coveralls
 
 script:
-  - py.test
+  - py.test --cov=. --cov-config .coveragerc .
 
+after_success:
+  - coveralls
