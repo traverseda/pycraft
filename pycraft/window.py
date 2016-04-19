@@ -6,7 +6,7 @@ import pyglet.window
 from pyglet.gl import *
 from pyglet.window import key, mouse
 
-from pycraft.objects.object import WorldObjectRegistry
+from pycraft.objects import brick, grass, sand, stone
 from pycraft.util import sectorize, cube_vertices
 
 TICKS_PER_SEC = 60
@@ -15,12 +15,6 @@ NUMERIC_KEYS = [
     key._1, key._2, key._3, key._4, key._5,
     key._6, key._7, key._8, key._9, key._0
 ]
-
-world_objects = WorldObjectRegistry()
-brick = world_objects.get('blocks.brick')
-grass = world_objects.get('blocks.grass')
-sand = world_objects.get('blocks.sand')
-stone = world_objects.get('blocks.stone')
 
 
 class Window(pyglet.window.Window):

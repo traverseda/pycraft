@@ -7,7 +7,7 @@ from pyglet.gl import *
 from pyglet.graphics import Batch, TextureGroup
 from pyglet.window import mouse
 
-from pycraft.objects.object import WorldObjectRegistry
+from pycraft.objects import brick, grass, sand, stone
 from pycraft.util import normalize, sectorize, cube_vertices, cube_shade
 from pycraft.shader import Shader
 
@@ -22,12 +22,6 @@ FACES = [
     ( 0, 0, 1),
     ( 0, 0,-1),
 ]
-
-world_objects = WorldObjectRegistry()
-brick = world_objects.get('blocks.brick')
-grass = world_objects.get('blocks.grass')
-sand = world_objects.get('blocks.sand')
-stone = world_objects.get('blocks.stone')
 
 
 class World:
