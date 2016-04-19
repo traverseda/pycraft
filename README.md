@@ -56,6 +56,18 @@ python -m pycraft
 # or: python3 -m pycraft
 ```
 
+## Testing
+
+```bash
+# basic
+py.test
+# coverage report
+coverage run -m py.test; coverage report
+# coverage report (html)
+coverage run -m py.test; coverage html
+# the report should at htmlcov/index.html
+```
+
 ## Features
 
 This is still a very early project and doesn't offer much over the original "minecraft in 500 lines" project.
