@@ -119,6 +119,8 @@ class Window(pyglet.window.Window):
             self.player.strafe_left()
         elif symbol == key.SPACE:
             self.player.jump()
+        elif symbol == key.LSHIFT:
+            self.player.strafe_down()
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
         elif symbol == key.TAB:
@@ -145,6 +147,10 @@ class Window(pyglet.window.Window):
             self.player.strafe_right()
         elif symbol == key.D:
             self.player.strafe_left()
+        elif symbol == key.SPACE:
+            self.player.strafe_down()
+        elif symbol == key.LSHIFT:
+            self.player.strafe_up()
 
     def on_resize(self, width, height):
         """Called when the window is resized to a new `width` and `height`."""

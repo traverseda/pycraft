@@ -40,6 +40,9 @@ class Player(WorldObject):
         # otherwise. The second element is -1 when moving left, 1 when moving
         # right, and 0 otherwise.
         self.strafe = [0, 0]
+        # This is strafing in the absolute up/down position, not
+        # relative to where the player is facing. 1 when moving up, -1 when moving down
+        self.strafe_z = 0
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
         self.position = (0, 5, 0)
@@ -69,14 +72,26 @@ class Player(WorldObject):
     def strafe_left(self):
         self.strafe[1] -= 1
 
+    def strafe_up(self):
+        if self.flying:
+            self.strafe_z += 1
+
+    def strafe_down(self):
+        if self.flying:
+            self.strafe_z -= 1;
+
     def jump(self):
-        """Increases vertical velocity, if grounded"""
-        if self.dy == 0:
-            self.dy = JUMP_SPEED
+        """Increases vertical velocity, if grounded. If flying, moves upwards"""
+        if self.flying:
+            self.strafe_up()
+        else:
+            if self.dy == 0:
+                self.dy = JUMP_SPEED
 
     def fly(self):
         """Toggles flying mode"""
         self.flying = not self.flying
+        self.strafe_z = 0
 
     def switch_inventory(self, index):
         self.block = self.inventory[index % len(self.inventory)]
@@ -133,6 +148,7 @@ class Player(WorldObject):
             dy = 0.0
             dx = 0.0
             dz = 0.0
+        dy += self.strafe_z
         return dx, dy, dz
 
     def update(self, dt, objects):
