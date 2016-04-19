@@ -1,8 +1,8 @@
 import math
 
-from .block import brick, grass, sand
+from .block import Brick, Grass, Sand
 from .object import WorldObject
-from .util import normalize
+from ..util import normalize
 
 PLAYER_HEIGHT = 2
 GRAVITY = 20.0
@@ -56,7 +56,7 @@ class Player(WorldObject):
         # Velocity in the y (upward) direction.
         self.dy = 0
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [brick, grass, sand]
+        self.inventory = [Brick, Grass, Sand]
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
