@@ -56,6 +56,8 @@ def test_licenses(**options):
         'pytest-xdist'    # MIT
         'tox',            # MIT
         'virtualenv',     # MIT
+        # TravisCI automatically installs nose, which is licensed under the LGPL
+        'nose',           # LGPL
 
         # --------------------------------------------------------------
         # Known licenses that do not register with this test and can
