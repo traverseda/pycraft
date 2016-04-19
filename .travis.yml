@@ -12,4 +12,5 @@ script:
   - py.test --cov=. --cov-config .coveragerc .
 
 after_success:
+  - coverage xml
   - coveralls
