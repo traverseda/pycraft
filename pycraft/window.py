@@ -8,8 +8,10 @@ from pyglet.window import key, mouse
 
 from pycraft.objects.object import WorldObjectRegistry
 from pycraft.util import sectorize, cube_vertices
+import pycraft.settings as settings
 
-TICKS_PER_SEC = 60
+
+TICKS_PER_SEC = settings.graphics['fps'] ##Right now there's no difference between simulation speed (tickrate) and graphics speed (fps)
 # Convenience list of num keys.
 NUMERIC_KEYS = [
     key._1, key._2, key._3, key._4, key._5,
@@ -159,9 +161,11 @@ class Window(pyglet.window.Window):
         self.clear()
         self.set_3d()
         glColor3d(1, 1, 1)
-        self.world.start_shader()
+        if settings.graphics['shaders']:
+            self.world.start_shader()
         self.world.batch.draw()
-        self.world.stop_shader()
+        if settings.graphics['shaders']:
+            self.world.stop_shader()
         self.draw_focused_block()
         self.set_2d()
         self.draw_label()
