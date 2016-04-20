@@ -11,25 +11,28 @@ class Block(WorldObject):
 
     unique = False
     texture = None
-
-    def destroy(self):
-        pass
+    breakable = False
 
 
 class Brick(Block):
     texture = BRICK
+    breakable = True
 
 
 class Grass(Block):
     texture = GRASS
+    breakable = True
 
 
 class Sand(Block):
     texture = SAND
+    breakable = True
+
+
+class WeakStone(Block):
+    texture = STONE
+    breakable = True
 
 
 class Stone(Block):
     texture = STONE
-
-    def destroy(self):
-        pass
