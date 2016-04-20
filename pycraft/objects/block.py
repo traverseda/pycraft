@@ -8,7 +8,6 @@ STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 
 class Block(WorldObject):
-
     unique = False
     texture = None
     breakable = False
