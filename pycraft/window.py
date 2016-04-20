@@ -27,9 +27,13 @@ class Window(pyglet.window.Window):
         # The crosshairs at the center of the screen.
         self.reticle = None
         # The label that is displayed in the top left of the canvas.
-        self.label = pyglet.text.Label(
+        self.game_info_label = pyglet.text.Label(
             '', font_name='Arial', font_size=18,
             x=10, y=self.height - 10, anchor_x='left', anchor_y='top',
+            color=(0, 0, 0, 255))
+        self.current_item_label = pyglet.text.Label(
+            '', font_name='Arial', font_size=18,
+            x=self.width - 10, y=10, anchor_x='right', anchor_y='bottom',
             color=(0, 0, 0, 255))
         # Whether or not the window exclusively captures the mouse.
         self.set_exclusive_mouse(False)
@@ -158,7 +162,7 @@ class Window(pyglet.window.Window):
     def on_resize(self, width, height):
         """Called when the window is resized to a new `width` and `height`."""
         # label
-        self.label.y = height - 10
+        self.game_info_label.y = height - 10
         # reticle
         if self.reticle:
             self.reticle.delete()
@@ -179,7 +183,7 @@ class Window(pyglet.window.Window):
         self.world.stop_shader()
         self.draw_focused_block()
         self.set_2d()
-        self.draw_label()
+        self.draw_labels()
         self.draw_reticle()
 
     def set_3d(self):
@@ -244,13 +248,15 @@ class Window(pyglet.window.Window):
             pyglet.graphics.draw(24, GL_QUADS, ('v3f/static', vertex_data))
             glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
 
-    def draw_label(self):
+    def draw_labels(self):
         """Draw the label in the top left of the screen."""
         x, y, z = self.player.position
-        self.label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
+        self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
             pyglet.clock.get_fps(), x, y, z,
             len(self.world._shown), len(self.world.objects))
-        self.label.draw()
+        self.game_info_label.draw()
+        self.current_item_label.text = self.player.block if self.player.block else "No items in inventory"
+        self.current_item_label.draw()
 
     def draw_reticle(self):
         """Draw the crosshairs in the center of the screen."""
