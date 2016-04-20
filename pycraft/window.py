@@ -73,10 +73,10 @@ class Window(pyglet.window.Window):
                     ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
                 # ON OSX, control + left click = right click.
                 if previous:
-                    self.world.add_block(previous, self.player.block)
+                    self.world.add_block(previous, self.player.block())
             elif button == pyglet.window.mouse.LEFT and block:
                 texture = self.world.objects[block]
-                if texture.breakable:
+                if texture.hit_and_destroy():
                     self.world.remove_block(block)
         else:
             self.set_exclusive_mouse(True)

@@ -7,7 +7,7 @@ from pyglet.gl import *
 from pyglet.graphics import Batch, TextureGroup
 from pyglet.window import mouse
 
-from pycraft.objects import brick, grass, sand, stone
+from pycraft.objects import Brick, Stone, Grass
 from pycraft.util import normalize, sectorize, cube_vertices, cube_shade
 from pycraft.shader import Shader
 
@@ -91,18 +91,18 @@ class World:
         for x in range(-n, n + 1, s):
             for z in range(-n, n + 1, s):
                 # create a layer stone an grass everywhere.
-                self.add_block((x, y - 3, z), stone, immediate=False)
+                self.add_block((x, y - 3, z), Stone(), immediate=False)
                 if x in (-n, n) or z in (-n, n):
                     # create outer walls.
                     for dy in range(-2, 3):
-                        self.add_block((x, y + dy, z), stone, immediate=False)
+                        self.add_block((x, y + dy, z), Stone(), immediate=False)
                 else:
                     y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
                     for y_lvl in range(y - 2, y_max):
                         if y_lvl < (y_max - 1):
-                            block = brick
+                            block = Brick()
                         else:
-                            block = grass
+                            block = Grass()
                         self.add_block((x, y_lvl, z), block, immediate=False)
 
     def hit_test(self, position, vector, max_distance=8):
