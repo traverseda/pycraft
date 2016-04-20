@@ -7,13 +7,14 @@ from pycraft.configuration import ConfigurationLoader
 
 WINDOW_CAPTION = 'PyCraft'
 
+
 def main():
     # Load configuration file
     config_loader = ConfigurationLoader()
     config_data = config_loader.load_configuration_file()
 
     window = Window(
-        ticks_ps = config_data["window"]["ticks_per_second"],
+        ticks_ps=config_data["window"]["ticks_per_second"],
         width=config_data["window"]["width"],
         height=config_data["window"]["height"],
         caption=WINDOW_CAPTION,
