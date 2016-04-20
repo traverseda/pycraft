@@ -8,6 +8,16 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import pycraft.util as util
 
 
+def test_cube_vertices():
+    """
+    Test cube_vertices function.
+    """
+    # After looking through this function, I really don't understand what it is supposed to be
+    # doing. There are many repeated vertices being generated and little organization. I don't
+    # want to mess anything up that other parts of the code are relying on so maybe someone
+    # else should take a look this.
+    # print(util.cube_vertices(0, 10, 20, 1))
+
 def test_normalize():
     """
     Test the normalize function.
@@ -33,5 +43,6 @@ def test_sectorize():
 
 
 if __name__ == "__main__":
+    test_cube_vertices()
     test_normalize()
     test_sectorize()
