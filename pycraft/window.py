@@ -8,7 +8,7 @@ from pyglet.window import key, mouse
 
 from pycraft.util import sectorize, cube_vertices
 
-TICKS_PER_SEC = 60
+#TICKS_PER_SEC = 60
 # Convenience list of num keys.
 NUMERIC_KEYS = [
     key._1, key._2, key._3, key._4, key._5,
@@ -18,10 +18,11 @@ NUMERIC_KEYS = [
 
 class Window(pyglet.window.Window):
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, ticks_ps, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
         self.set_world(None)
         self.set_player(None)
+        self.ticks_per_second = ticks_ps
         # The crosshairs at the center of the screen.
         self.reticle = None
         # The label that is displayed in the top left of the canvas.
@@ -33,7 +34,8 @@ class Window(pyglet.window.Window):
         self.set_exclusive_mouse(False)
         # This call schedules the `update()` method to be called
         # TICKS_PER_SEC. This is the main game event loop.
-        pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
+        # pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
+        pyglet.clock.schedule_interval(self.update, 1.0 / self.ticks_per_second)
 
     def set_world(self, world):
         self.world = world
@@ -214,7 +216,7 @@ class Window(pyglet.window.Window):
         dt : float
             The change in time since the last call.
         """
-        self.world.process_queue(TICKS_PER_SEC)
+        self.world.process_queue(self.ticks_per_second)
         sector = sectorize(self.player.position)
         if sector != self.world.sector:
             self.world.change_sectors(self.world.sector, sector)
