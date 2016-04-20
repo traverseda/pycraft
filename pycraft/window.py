@@ -163,6 +163,7 @@ class Window(pyglet.window.Window):
         """Called when the window is resized to a new `width` and `height`."""
         # label
         self.game_info_label.y = height - 10
+        self.current_item_label.x = width - 10
         # reticle
         if self.reticle:
             self.reticle.delete()
