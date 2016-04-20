@@ -15,9 +15,9 @@ class Shader:
     # the arrays will be concatenated into one string by OpenGL
 
     def __init__(self, vert=None, frag=None, geom=None):
-        vert = vert if vert else []
-        frag = frag if frag else []
-        geom = geom if geom else []
+        vert = vert or []
+        frag = frag or []
+        geom = geom or []
 
         # create the program handle
         self.handle = glCreateProgram()
