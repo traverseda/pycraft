@@ -1,6 +1,6 @@
 import math
 
-from .block import Brick, Grass, Sand
+from .block import Brick, Grass, Sand, WeakStone
 from .object import WorldObject
 from ..util import normalize
 
@@ -56,7 +56,7 @@ class Player(WorldObject):
         # Velocity in the y (upward) direction.
         self.dy = 0
         # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [Brick, Grass, Sand]
+        self.inventory = [Brick, Grass, Sand, WeakStone]
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
