@@ -121,10 +121,7 @@ class Player(WorldObject):
             self.inventory.remove(item)
             del self.items[item]
             if self.block == item:
-                if len(self.inventory):
-                  self.block = self.inventory[0]
-                else:
-                    self.block = None
+                self.block = self.inventory if len(self.inventory) else None
 
     def get_sight_vector(self):
         """Returns the current line of sight vector indicating the direction the
