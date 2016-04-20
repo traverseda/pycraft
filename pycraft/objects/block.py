@@ -13,6 +13,17 @@ class Block(WorldObject):
     texture = None
     breakable = False
 
+def get_block(id):
+    if id == "brick":
+        return Brick
+    elif id == "grass":
+        return Grass
+    elif id == "sand":
+        return Sand
+    elif id == "weakstone":
+        return WeakStone
+    elif id == "stone":
+        return Stone
 
 class Brick(Block):
     texture = BRICK
