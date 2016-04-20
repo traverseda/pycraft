@@ -1,8 +1,14 @@
+.. image:: https://travis-ci.org/traverseda/pycraft.svg?branch=master
+    :target: https://travis-ci.org/traverseda/pycraft
+.. image:: https://coveralls.io/repos/github/traverseda/pycraft/badge.svg?branch=master :target: https://coveralls.io/github/traverseda/pycraft?branch=master 
+
 PyCraft
 =======
 
 A community driven fork of `foglemans "Minecraft"
 repo <https://github.com/fogleman/Minecraft>`_.
+
+|#pycraft on freenode|
 
 
 Motivation
