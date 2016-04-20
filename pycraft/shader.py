@@ -4,6 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0
 # (see http://www.boost.org/LICENSE_1_0.txt)
 #
+from builtins import bytes
 from _ctypes import POINTER, pointer, byref
 from ctypes import c_char_p, cast, c_char, c_int, create_string_buffer, c_float
 
