@@ -45,6 +45,7 @@ with open(os.path.join(cwd, project_name, '__init__.py'), 'r') as fd:
 
 # Package requirements for execution
 requirements = [
+    'future',
     'pyglet',
     'noise',
 ]

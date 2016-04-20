@@ -20,7 +20,7 @@ NUMERIC_KEYS = [
 class Window(pyglet.window.Window):
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Window, self).__init__(*args, **kwargs)
         self.set_world(None)
         self.set_player(None)
         # The crosshairs at the center of the screen.
@@ -46,7 +46,7 @@ class Window(pyglet.window.Window):
         """If `exclusive` is True, the game will capture the mouse, if False the
         game will ignore the mouse.
         """
-        super().set_exclusive_mouse(exclusive)
+        super(Window, self).set_exclusive_mouse(exclusive)
         self.exclusive = exclusive
 
     def on_mouse_press(self, x, y, button, modifiers):
