@@ -1,6 +1,4 @@
 
-from math import floor
-
 # Size of sectors used to ease block loading.
 SECTOR_SIZE = 16
 
@@ -48,7 +46,7 @@ def normalize(position):
     block_position : tuple of ints of len 3
     """
     x, y, z = position
-    x, y, z = (int(floor(x)), int(floor(y)), int(floor(z)))
+    x, y, z = (int(round(x)), int(round(y)), int(round(z)))
     return x, y, z
 
 
