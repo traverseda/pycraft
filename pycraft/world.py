@@ -25,12 +25,12 @@ FACES = [
 
 
 class World:
-
     def __init__(self):
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = Batch()
         # A TextureGroup manages an OpenGL texture.
-        self.group = TextureGroup(image.load(TEXTURE_PATH).get_texture())
+        # self.group = TextureGroup(image.load(TEXTURE_PATH).get_texture())
+        self.texture_group = {}
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
         self.objects = {}
@@ -231,8 +231,10 @@ class World:
         vertex_data = cube_vertices(x, y, z, 0.5)
         shade_data = cube_shade(1, 1, 1, 1)
         texture_data = block.texture
+        if block.id not in self.texture_group:
+            self.texture_group[block.id] = TextureGroup(image.load(block.texture_path).get_texture())
         self._shown[position] = self.batch.add(
-            24, GL_QUADS, self.group,
+            24, GL_QUADS, self.texture_group[block.id],
             ('v3f/static', vertex_data),
             ('c3f/static', shade_data),
             ('t2f/static', texture_data))
