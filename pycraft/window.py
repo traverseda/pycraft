@@ -6,7 +6,6 @@ import pyglet.window
 from pyglet.gl import *
 from pyglet.window import key, mouse
 
-from pycraft.objects import brick, grass, sand, stone
 from pycraft.util import sectorize, cube_vertices
 
 #TICKS_PER_SEC = 60
@@ -20,7 +19,7 @@ NUMERIC_KEYS = [
 class Window(pyglet.window.Window):
 
     def __init__(self, ticks_ps, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(Window, self).__init__(*args, **kwargs)
         self.set_world(None)
         self.set_player(None)
         self.ticks_per_second = ticks_ps
@@ -48,7 +47,7 @@ class Window(pyglet.window.Window):
         """If `exclusive` is True, the game will capture the mouse, if False the
         game will ignore the mouse.
         """
-        super().set_exclusive_mouse(exclusive)
+        super(Window, self).set_exclusive_mouse(exclusive)
         self.exclusive = exclusive
 
     def on_mouse_press(self, x, y, button, modifiers):
@@ -77,7 +76,7 @@ class Window(pyglet.window.Window):
                     self.world.add_block(previous, self.player.block)
             elif button == pyglet.window.mouse.LEFT and block:
                 texture = self.world.objects[block]
-                if texture != stone:
+                if texture.breakable:
                     self.world.remove_block(block)
         else:
             self.set_exclusive_mouse(True)

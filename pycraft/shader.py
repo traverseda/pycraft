@@ -4,6 +4,7 @@
 # Distributed under the Boost Software License, Version 1.0
 # (see http://www.boost.org/LICENSE_1_0.txt)
 #
+from builtins import bytes
 from _ctypes import POINTER, pointer, byref
 from ctypes import c_char_p, cast, c_char, c_int, create_string_buffer, c_float
 
@@ -15,9 +16,9 @@ class Shader:
     # the arrays will be concatenated into one string by OpenGL
 
     def __init__(self, vert=None, frag=None, geom=None):
-        vert = vert if vert else []
-        frag = frag if frag else []
-        geom = geom if geom else []
+        vert = vert or []
+        frag = frag or []
+        geom = geom or []
 
         # create the program handle
         self.handle = glCreateProgram()

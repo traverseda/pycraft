@@ -1,2 +1,4 @@
+
+future==0.15.2
 noise==1.2.2
 pyglet==1.2.4
