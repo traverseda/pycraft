@@ -1,6 +1,6 @@
 .. image:: https://travis-ci.org/traverseda/pycraft.svg?branch=master
     :target: https://travis-ci.org/traverseda/pycraft
-.. image:: https://coveralls.io/repos/github/traverseda/pycraft/badge.svg?branch=master :target: https://coveralls.io/github/traverseda/pycraft?branch=master
+.. image:: https://coveralls.io/repos/github/traverseda/pycraft/badge.svg?branch=master :target: https://coveralls.io/github/traverseda/pycraft?branch=master 
 
 PyCraft
 =======
