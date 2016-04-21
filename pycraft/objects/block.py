@@ -23,17 +23,19 @@ class Block(WorldObject):
         self.block_duration -= 1
         return self.block_duration == 0
 
+
 def get_block(id):
     if id == "brick":
-        return Brick
+        return Brick()
     elif id == "grass":
-        return Grass
+        return Grass()
     elif id == "sand":
-        return Sand
+        return Sand()
     elif id == "weakstone":
-        return WeakStone
+        return WeakStone()
     elif id == "stone":
-        return Stone
+        return Stone()
+
 
 class Brick(Block):
     id = 1
