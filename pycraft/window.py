@@ -6,7 +6,7 @@ import pyglet.window
 from pyglet.gl import *
 from pyglet.window import key, mouse
 
-from pycraft.util import sectorize, cube_vertices
+from pycraft.util import sectorize, cube_vertices, normalize
 from pycraft.objects.block import get_block
 
 #TICKS_PER_SEC = 60
@@ -77,9 +77,13 @@ class Window(pyglet.window.Window):
             if (button == mouse.RIGHT) or \
                     ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
                 # ON OSX, control + left click = right click.
-                if previous and self.player.block:
+                player_x, player_y, player_z = normalize(self.player.position)
+                if previous and self.player.block and \
+                    previous != (player_x, player_y, player_z) and \
+                        previous != (player_x, player_y-1, player_z): # make sure the block isn't in the players head or feet
                     self.world.add_block(previous, get_block(self.player.block))
                     self.player.adjust_inventory(self.player.block)
+
             elif button == pyglet.window.mouse.LEFT and block:
                 texture = self.world.objects[block]
                 if texture.breakable:
