@@ -56,8 +56,23 @@ class Player(WorldObject):
         self.rotation = (0, 0)
         # Velocity in the y (upward) direction.
         self.dy = 0
-        # A list of blocks the player can place. Hit num keys to cycle.
-        self.inventory = [Brick, Grass, Sand, WeakStone, Water]
+        # A list of blocks the player begins with. Hit num keys to cycle.
+        self.inventory = ["brick", "grass", "sand", "weakstone"]
+        # A dict of player blocks with their respective quantities
+        self.items = {
+            "brick": {
+                "qty": 10
+            },
+            "grass": {
+                "qty": 20
+            },
+            "sand": {
+                "qty": 5
+            },
+            "weakstone": {
+                "qty": 15
+            }
+        }
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
@@ -95,7 +110,19 @@ class Player(WorldObject):
         self.strafe_z = 0
 
     def switch_inventory(self, index):
-        self.block = self.inventory[index % len(self.inventory)]
+        if len(self.inventory):
+            self.block = self.inventory[index % len(self.inventory)]
+
+    def adjust_inventory(self, item, qty=1):
+        """Adjusts player inventory when a block is placed; updates current
+        block if item is no longer available
+        """
+        self.items[item]["qty"] -= qty
+        if self.items[item]["qty"] == 0:
+            self.inventory.remove(item)
+            del self.items[item]
+            if self.block == item:
+                self.block = self.inventory[0] if len(self.inventory) else None
 
     def get_sight_vector(self):
         """Returns the current line of sight vector indicating the direction the

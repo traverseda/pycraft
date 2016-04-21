@@ -1,4 +1,3 @@
-
 # Size of sectors used to ease block loading.
 SECTOR_SIZE = 16
 
