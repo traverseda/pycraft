@@ -282,15 +282,15 @@ class World:
         """Generate blocks within sector using simplex_noise2
         """
         for column in reverse_sectorize(sector):
-                    x,z = column
-                    y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
-                    for y_lvl in range(0 - 2, y_max):
-                        self.add_block((x, y_lvl, z), sand, immediate=False)
-                    else:
-                        self.add_block((x, y_lvl, z), grass, immediate=False)
-                    # add the safety stone floor.
-                    # don't want anyone falling into the ether.
-                    self.add_block((x, 0 - 3, z), stone, immediate=False)
+            x,z = column
+            y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
+            for y_lvl in range(0 - 2, y_max):
+                self.add_block((x, y_lvl, z), sand, immediate=False)
+            else:
+                self.add_block((x, y_lvl, z), grass, immediate=False)
+            # add the safety stone floor.
+            # don't want anyone falling into the ether.
+            self.add_block((x, 0 - 3, z), stone, immediate=False)
             
 
     def hide_sector(self, sector):
