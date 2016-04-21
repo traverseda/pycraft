@@ -77,7 +77,9 @@ class Window(pyglet.window.Window):
             if (button == mouse.RIGHT) or \
                     ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
                 # ON OSX, control + left click = right click.
-                if previous and self.player.block and previous.position:
+                print("%s,%s" % (previous,normalize(self.player.position)))
+                player_x, player_y, player_z = normalize(self.player.position)
+                if previous and self.player.block and previous != (player_x, player_y, player_z) and previous != (player_x, player_y-1, player_z):
                     self.world.add_block(previous, get_block(self.player.block))
                     self.player.adjust_inventory(self.player.block)
                     # print("ASS")
