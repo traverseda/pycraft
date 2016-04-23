@@ -1,5 +1,7 @@
+# python imports
 import math
 
+# 3rd party imports
 import pyglet.clock
 import pyglet.graphics
 import pyglet.window
@@ -86,7 +88,7 @@ class Window(pyglet.window.Window):
 
             elif button == pyglet.window.mouse.LEFT and block:
                 texture = self.world.objects[block]
-                if texture.breakable:
+                if texture.hit_and_destroy():
                     self.world.remove_block(block)
         else:
             self.set_exclusive_mouse(True)
