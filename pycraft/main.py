@@ -24,6 +24,6 @@ def main():
     window.set_exclusive_mouse(config_data["window"]["exclusive_mouse"])
     world = World()
     window.set_world(world)
-    player = Player()
+    player = Player(config_data["world"])
     window.set_player(player)
     pyglet.app.run()

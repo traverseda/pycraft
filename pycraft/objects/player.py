@@ -1,22 +1,9 @@
 import math
 
+from .block import Brick, Grass, Sand, WeakStone
 from .object import WorldObject
 from ..util import normalize
 
-PLAYER_HEIGHT = 2
-GRAVITY = 20.0
-MAX_JUMP_HEIGHT = 2.0  # About the height of two blocks.
-# To derive the formula for calculating jump speed, first solve
-#    v_t = v_0 + a * t
-# for the time at which you achieve maximum height, where a is the acceleration
-# due to gravity and v_t = 0. This gives:
-#    t = - v_0 / a
-# Use t and the desired MAX_JUMP_HEIGHT to solve for v_0 (jump speed) in
-#    s = s_0 + v_0 * t + (a * t^2) / 2
-JUMP_SPEED = math.sqrt(2 * GRAVITY * MAX_JUMP_HEIGHT)
-TERMINAL_VELOCITY = 50
-WALKING_SPEED = 5
-FLYING_SPEED = 15
 FACES = [
     (0, 1, 0),
     (0, -1, 0),
@@ -28,8 +15,17 @@ FACES = [
 
 
 class Player(WorldObject):
-
-    def __init__(self):
+    def __init__(self, config):
+        # general world configuration
+        self.config = config
+        # To derive the formula for calculating jump speed, first solve
+        #    v_t = v_0 + a * t
+        # for the time at which you achieve maximum height, where a is the acceleration
+        # due to gravity and v_t = 0. This gives:
+        #    t = - v_0 / a
+        # Use t and the desired MAX_JUMP_HEIGHT to solve for v_0 (jump speed) in
+        #    s = s_0 + v_0 * t + (a * t^2) / 2
+        self.jump_speed = math.sqrt(2 * self.config['gravity'] * self.config['max_jump_height'])
         # When flying gravity has no effect and speed is increased.
         self.flying = False
         # Strafing is moving lateral to the direction you are facing,
@@ -40,8 +36,7 @@ class Player(WorldObject):
         # right, and 0 otherwise.
         self.strafe = [0, 0]
         # This is strafing in the absolute up/down position, not
-        # relative to where the player is facing. 1 when moving up, -1 when
-        # moving down
+        # relative to where the player is facing. 1 when moving up, -1 when moving down
         self.strafe_z = 0
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
@@ -50,9 +45,8 @@ class Player(WorldObject):
         # plane) measured from the z-axis down. The second is the rotation
         # angle from the ground plane up. Rotation is in degrees.
         #
-        # The vertical plane rotation ranges from -90 (looking straight down)
-        # to 90 (looking straight up). The horizontal rotation range is
-        # unbounded.
+        # The vertical plane rotation ranges from -90 (looking straight down) to
+        # 90 (looking straight up). The horizontal rotation range is unbounded.
         self.rotation = (0, 0)
         # Velocity in the y (upward) direction.
         self.dy = 0
@@ -72,8 +66,7 @@ class Player(WorldObject):
             }
         }
 
-        # this way you only have to modify the dict to add items to the
-        # starting inventory
+        # this way you only have to modify the dict to add items to the starting inventory
         self.inventory = list(self.items.keys())
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
@@ -96,16 +89,15 @@ class Player(WorldObject):
 
     def strafe_down(self):
         if self.flying:
-            self.strafe_z -= 1
+            self.strafe_z -= 1;
 
     def jump(self):
-        """Increases vertical velocity, if grounded.
-        If flying, moves upwards"""
+        """Increases vertical velocity, if grounded. If flying, moves upwards"""
         if self.flying:
             self.strafe_up()
         else:
             if self.dy == 0:
-                self.dy = JUMP_SPEED
+                self.dy = self.jump_speed
 
     def fly(self):
         """Toggles flying mode"""
@@ -113,12 +105,21 @@ class Player(WorldObject):
         self.strafe_z = 0
 
     def switch_inventory(self, index):
+        """
+        Change selected element in the inventory
+        :param index:integer
+        :return:None
+        """
         if len(self.inventory):
             self.block = self.inventory[index % len(self.inventory)]
 
     def adjust_inventory(self, item, qty=1):
-        """Adjusts player inventory when a block is placed; updates current
+        """
+        Adjusts player inventory when a block is placed; updates current
         block if item is no longer available
+        :param item:string
+        :param qty:integer
+        :return:None
         """
         self.items[item]["qty"] -= qty
         if self.items[item]["qty"] == 0:
@@ -132,12 +133,12 @@ class Player(WorldObject):
         player is looking.
         """
         x, y = self.rotation
-        # y ranges from -90 to 90, or -pi/2 to pi/2, so m ranges from 0 to 1
-        # and is 1 when looking ahead parallel to the ground and 0 when looking
+        # y ranges from -90 to 90, or -pi/2 to pi/2, so m ranges from 0 to 1 and
+        # is 1 when looking ahead parallel to the ground and 0 when looking
         # straight up or down.
         m = math.cos(math.radians(y))
-        # dy ranges from -1 to 1 and is -1 when looking straight down and 1
-        # when looking straight up.
+        # dy ranges from -1 to 1 and is -1 when looking straight down and 1 when
+        # looking straight up.
         dy = math.sin(math.radians(y))
         dx = math.cos(math.radians(x - 90)) * m
         dz = math.sin(math.radians(x - 90)) * m
@@ -192,23 +193,22 @@ class Player(WorldObject):
             The change in time since the last call.
         """
         # walking
-        speed = FLYING_SPEED if self.flying else WALKING_SPEED
+        speed = self.config['flying_speed'] if self.flying else self.config['walking_speed']
         d = dt * speed  # distance covered this tick.
         dx, dy, dz = self.get_motion_vector()
         # New position in space, before accounting for gravity.
         dx, dy, dz = dx * d, dy * d, dz * d
         # gravity
         if not self.flying:
-            # Update your vertical speed: if you are falling, speed up until
-            # you hit terminal velocity; if you are jumping, slow down until
-            # you start falling.
-            self.dy -= dt * GRAVITY
-            self.dy = max(self.dy, -TERMINAL_VELOCITY)
+            # Update your vertical speed: if you are falling, speed up until you
+            # hit terminal velocity; if you are jumping, slow down until you
+            # start falling.
+            self.dy -= dt * self.config['gravity']
+            self.dy = max(self.dy, -self.config["terminal_velocity"])
             dy += self.dy * dt
         # collisions
         x, y, z = self.position
-        x, y, z = self.collide((x + dx, y + dy, z + dz),
-                               PLAYER_HEIGHT, objects)
+        x, y, z = self.collide((x + dx, y + dy, z + dz), self.config["player_height"], objects)
         self.position = (x, y, z)
 
     def collide(self, position, height, objects):
