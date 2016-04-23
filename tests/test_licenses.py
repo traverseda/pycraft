@@ -1,11 +1,8 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-'''
+"""
 Attempt to verify that only permissive licenses are used within the
 project.
-'''
+"""
 
-from __future__ import print_function
 import pytest
 import sys
 
@@ -14,10 +11,10 @@ from pip.utils import get_installed_distributions
 
 @pytest.mark.license
 def test_licenses(**options):
-    '''
+    """
     Checks for licenses minus those that have been identified to
     be ignored.
-    '''
+    """
     meta_files_to_check = ['PKG-INFO', 'METADATA']
 
     failed = False
@@ -58,7 +55,8 @@ def test_licenses(**options):
         'pytest-xdist'    # MIT
         'tox',            # MIT
         'virtualenv',     # MIT
-        # TravisCI automatically installs nose, which is licensed under the LGPL
+        # TravisCI automatically installs nose,
+        # which is licensed under the LGPL
         'nose',           # LGPL
 
         # --------------------------------------------------------------
@@ -133,4 +131,3 @@ def test_licenses(**options):
         if project_name not in known_ignores and found_valid is False:
             failed = True
     assert not failed, "Some licences were not approved or not found"
-

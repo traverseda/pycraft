@@ -3,18 +3,18 @@ from collections import OrderedDict
 
 from noise.perlin import SimplexNoise
 from pyglet import image
-from pyglet.gl import glClearColor, glEnable, GL_CULL_FACE, glTexParameteri,  \
-                      GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST,       \
-                      GL_TEXTURE_MAG_FILTER, GL_FOG, glFogfv, GL_FOG_COLOR,   \
-                      GLfloat, glHint, GL_FOG_HINT, GL_DONT_CARE, glFogi,     \
-                      GL_FOG_MODE, GL_LINEAR, glFogf, GL_FOG_START,           \
-                      GL_FOG_END, GL_QUADS                                    
+from pyglet.gl import (
+    glClearColor, glEnable, GL_CULL_FACE, glTexParameteri, GL_TEXTURE_2D,
+    GL_TEXTURE_MIN_FILTER, GL_NEAREST, GL_TEXTURE_MAG_FILTER, GL_FOG, glFogfv,
+    GL_FOG_COLOR, GLfloat, glHint, GL_FOG_HINT, GL_DONT_CARE, glFogi,
+    GL_FOG_MODE, GL_LINEAR, glFogf, GL_FOG_START, GL_FOG_END, GL_QUADS
+)
 from pyglet.graphics import Batch, TextureGroup
-from pyglet.window import mouse
 
 from pycraft.objects import brick, grass, sand, stone
-from pycraft.util import normalize, sectorize, reverse_sectorize, \
-                         cube_vertices, cube_shade
+from pycraft.util import (
+    normalize, sectorize, reverse_sectorize, cube_vertices, cube_shade
+)
 from pycraft.shader import Shader
 
 simplex_noise2 = SimplexNoise(256).noise2
@@ -52,29 +52,28 @@ class World:
         self.shader = None
         self.show_hide_queue = OrderedDict()
         self.init_gl()
- #       self._initialize()
         self.init_shader()
 
     def init_gl(self):
         """Basic OpenGL configuration."""
         # Set the color of "clear", i.e. the sky, in rgba.
         glClearColor(0.5, 0.69, 1.0, 1)
-        # Enable culling (not rendering) of back-facing facets -- facets that aren't
-        # visible to you.
+        # Enable culling (not rendering) of back-facing facets -- facets that
+        # aren't visible to you.
         glEnable(GL_CULL_FACE)
-        # Set the texture minification/magnification function to GL_NEAREST (nearest
-        # in Manhattan distance) to the specified texture coordinates. GL_NEAREST
-        # "is generally faster than GL_LINEAR, but it can produce textured images
-        # with sharper edges because the transition between texture elements is not
-        # as smooth."
+        # Set the texture minification/magnification function to GL_NEAREST
+        # (nearest in Manhattan distance) to the specified texture coordinates.
+        # GL_NEAREST "is generally faster than GL_LINEAR, but it can produce
+        # textured images with sharper edges because the transition between
+        # texture elements is not as smooth."
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
         self.init_gl_fog()
 
     def init_gl_fog(self):
         """Configure the OpenGL fog properties."""
-        # Enable fog. Fog "blends a fog color with each rasterized pixel fragment's
-        # post-texturing color."
+        # Enable fog. Fog "blends a fog color with each rasterized pixel
+        # fragment's post-texturing color."
         glEnable(GL_FOG)
         # Set the fog color.
         glFogfv(GL_FOG_COLOR, (GLfloat * 4)(0.5, 0.69, 1.0, 1))
@@ -82,8 +81,8 @@ class World:
         glHint(GL_FOG_HINT, GL_DONT_CARE)
         # Specify the equation used to compute the blending factor.
         glFogi(GL_FOG_MODE, GL_LINEAR)
-        # How close and far away fog starts and ends. The closer the start and end,
-        # the denser the fog in the fog range.
+        # How close and far away fog starts and ends. The closer the start and
+        # end, the denser the fog in the fog range.
         glFogf(GL_FOG_START, 20.0)
         glFogf(GL_FOG_END, 60.0)
 
@@ -274,13 +273,12 @@ class World:
         else:
             self.generate_sector(sector)
             self.show_sector(sector)
-            
 
     def generate_sector(self, sector):
         """Generate blocks within sector using simplex_noise2
         """
         for column in reverse_sectorize(sector):
-            x,z = column
+            x, z = column
             y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
             for y_lvl in range(0 - 2, y_max):
                 self.add_block((x, y_lvl, z), sand, immediate=False)
@@ -289,7 +287,6 @@ class World:
             # add the safety stone floor.
             # don't want anyone falling into the ether.
             self.add_block((x, 0 - 3, z), stone, immediate=False)
-            
 
     def hide_sector(self, sector):
         """Ensure all blocks in the given sector that should be hidden are
@@ -308,7 +305,7 @@ class World:
         after_set = set()
         pad = 4
         for dx in range(-pad, pad + 1):
-            for dy in [0]:  # range(-pad, pad + 1):
+            for dy in [0]:
                 for dz in range(-pad, pad + 1):
                     if dx ** 2 + dy ** 2 + dz ** 2 > (pad + 1) ** 2:
                         continue
@@ -327,13 +324,13 @@ class World:
 
     def _dequeue(self):
         """Pop the top function from the internal queue and call it."""
-        position,show = self.show_hide_queue.popitem(last=False)
+        position, show = self.show_hide_queue.popitem(last=False)
         shown = position in self._shown
         if show and not shown:
-            self._show_block(position,self.objects[position])
+            self._show_block(position, self.objects[position])
         elif shown and not show:
             self._hide_block(position)
-            
+
     def process_queue(self, ticks_per_sec):
         """Process the entire queue while taking periodic breaks. This allows
         the game loop to run smoothly. The queue contains calls to
@@ -350,9 +347,6 @@ class World:
             self._dequeue()
 
     def init_shader(self):
-        vertex_shader = ""
-        fragment_shader = ""
-
         with open("pycraft/shaders/world.vert") as handle:
             vertex_shader = handle.read()
 

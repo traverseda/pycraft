@@ -1,6 +1,5 @@
 import math
 
-from .block import Brick, Grass, Sand, WeakStone
 from .object import WorldObject
 from ..util import normalize
 
@@ -41,7 +40,8 @@ class Player(WorldObject):
         # right, and 0 otherwise.
         self.strafe = [0, 0]
         # This is strafing in the absolute up/down position, not
-        # relative to where the player is facing. 1 when moving up, -1 when moving down
+        # relative to where the player is facing. 1 when moving up, -1 when
+        # moving down
         self.strafe_z = 0
         # Current (x, y, z) position in the world, specified with floats. Note
         # that, perhaps unlike in math class, the y-axis is the vertical axis.
@@ -50,8 +50,9 @@ class Player(WorldObject):
         # plane) measured from the z-axis down. The second is the rotation
         # angle from the ground plane up. Rotation is in degrees.
         #
-        # The vertical plane rotation ranges from -90 (looking straight down) to
-        # 90 (looking straight up). The horizontal rotation range is unbounded.
+        # The vertical plane rotation ranges from -90 (looking straight down)
+        # to 90 (looking straight up). The horizontal rotation range is
+        # unbounded.
         self.rotation = (0, 0)
         # Velocity in the y (upward) direction.
         self.dy = 0
@@ -71,7 +72,8 @@ class Player(WorldObject):
             }
         }
 
-        # this way you only have to modify the dict to add items to the starting inventory
+        # this way you only have to modify the dict to add items to the
+        # starting inventory
         self.inventory = list(self.items.keys())
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
@@ -94,10 +96,11 @@ class Player(WorldObject):
 
     def strafe_down(self):
         if self.flying:
-            self.strafe_z -= 1;
+            self.strafe_z -= 1
 
     def jump(self):
-        """Increases vertical velocity, if grounded. If flying, moves upwards"""
+        """Increases vertical velocity, if grounded.
+        If flying, moves upwards"""
         if self.flying:
             self.strafe_up()
         else:
@@ -129,12 +132,12 @@ class Player(WorldObject):
         player is looking.
         """
         x, y = self.rotation
-        # y ranges from -90 to 90, or -pi/2 to pi/2, so m ranges from 0 to 1 and
-        # is 1 when looking ahead parallel to the ground and 0 when looking
+        # y ranges from -90 to 90, or -pi/2 to pi/2, so m ranges from 0 to 1
+        # and is 1 when looking ahead parallel to the ground and 0 when looking
         # straight up or down.
         m = math.cos(math.radians(y))
-        # dy ranges from -1 to 1 and is -1 when looking straight down and 1 when
-        # looking straight up.
+        # dy ranges from -1 to 1 and is -1 when looking straight down and 1
+        # when looking straight up.
         dy = math.sin(math.radians(y))
         dx = math.cos(math.radians(x - 90)) * m
         dz = math.sin(math.radians(x - 90)) * m
@@ -196,9 +199,9 @@ class Player(WorldObject):
         dx, dy, dz = dx * d, dy * d, dz * d
         # gravity
         if not self.flying:
-            # Update your vertical speed: if you are falling, speed up until you
-            # hit terminal velocity; if you are jumping, slow down until you
-            # start falling.
+            # Update your vertical speed: if you are falling, speed up until
+            # you hit terminal velocity; if you are jumping, slow down until
+            # you start falling.
             self.dy -= dt * GRAVITY
             self.dy = max(self.dy, -TERMINAL_VELOCITY)
             dy += self.dy * dt
