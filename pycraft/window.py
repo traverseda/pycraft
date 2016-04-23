@@ -10,6 +10,7 @@ from pyglet.window import key, mouse
 
 from pycraft.util import sectorize, cube_vertices, normalize
 from pycraft.objects.block import get_block
+from pycraft.configuration import ConfigurationLoader
 
 # TICKS_PER_SEC = 60
 # Convenience list of num keys.
@@ -43,6 +44,8 @@ class Window(pyglet.window.Window):
         # TICKS_PER_SEC. This is the main game event loop.
         # pyglet.clock.schedule_interval(self.update, 1.0 / TICKS_PER_SEC)
         pyglet.clock.schedule_interval(self.update, 1.0 / self.ticks_per_second)
+        config_loader = ConfigurationLoader()
+        self.config_data = config_loader.load_configuration_file()
 
     def set_world(self, world):
         self.world = world
@@ -123,21 +126,21 @@ class Window(pyglet.window.Window):
         modifiers : int
             Number representing any modifying keys that were pressed.
         """
-        if symbol == key.W:
+        if symbol == getattr(key, self.config_data['controls']['forward']):
             self.player.strafe_forward()
-        elif symbol == key.S:
+        elif symbol == getattr(key, self.config_data['controls']['backward']):
             self.player.strafe_backward()
-        elif symbol == key.D:
+        elif symbol == getattr(key, self.config_data['controls']['right']):
             self.player.strafe_right()
-        elif symbol == key.A:
+        elif symbol == getattr(key, self.config_data['controls']['left']):
             self.player.strafe_left()
-        elif symbol == key.SPACE:
+        elif symbol == getattr(key, self.config_data['controls']['jump']):
             self.player.jump()
-        elif symbol == key.LSHIFT:
+        elif symbol == getattr(key, self.config_data['controls']['down']):
             self.player.strafe_down()
         elif symbol == key.ESCAPE:
             self.set_exclusive_mouse(False)
-        elif symbol == key.TAB:
+        elif symbol == getattr(key, self.config_data['controls']['fly']):
             self.player.fly()
         elif symbol in NUMERIC_KEYS:
             self.player.switch_inventory(symbol - NUMERIC_KEYS[0])
@@ -153,17 +156,17 @@ class Window(pyglet.window.Window):
         modifiers : int
             Number representing any modifying keys that were pressed.
         """
-        if symbol == key.W:
+        if symbol == getattr(key, self.config_data['controls']['forward']):
             self.player.strafe_backward()
-        elif symbol == key.S:
+        elif symbol == getattr(key, self.config_data['controls']['backward']):
             self.player.strafe_forward()
-        elif symbol == key.A:
+        elif symbol == getattr(key, self.config_data['controls']['left']):
             self.player.strafe_right()
-        elif symbol == key.D:
+        elif symbol == getattr(key, self.config_data['controls']['right']):
             self.player.strafe_left()
-        elif symbol == key.SPACE:
+        elif symbol == getattr(key, self.config_data['controls']['jump']):
             self.player.strafe_down()
-        elif symbol == key.LSHIFT:
+        elif symbol == getattr(key, self.config_data['controls']['down']):
             self.player.strafe_up()
 
     def on_resize(self, width, height):
