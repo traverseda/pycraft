@@ -18,13 +18,14 @@ from pyglet.window import key
     }
 """
 
+
 def update_dict(d, u):
-    for key, value in u.items():
+    for key_, value in u.items():
         if isinstance(value, collections.Mapping):
-            r = update_dict(d.get(key, {}), value)
-            d[key] = r
+            r = update_dict(d.get(key_, {}), value)
+            d[key_] = r
         else:
-            d[key] = u[key]
+            d[key_] = u[key_]
     return d
 
 
@@ -34,9 +35,9 @@ class ConfigurationLoader:
     """
 
     def __init__(self):
-        '''
-                Initialize with defaut values
-        '''
+        """
+            Initialize with defaut values
+        """
         self.game_config = {
             "window": {
                 "width": 800,
@@ -73,7 +74,8 @@ class ConfigurationLoader:
             json_data = json.load(open(self.configuration_file_path))
             update_dict(self.game_config, json_data)
         except IOError:
-            # Create a new configuration file with the defaut values stored in the config_game variable
+            # Create a new configuration file with the defaut values stored
+            # in the config_game variable
             with open(self.configuration_file_path, 'w') as f:
                 json.dump(self.game_config, f)
 
@@ -89,4 +91,3 @@ class ConfigurationLoader:
                 getattr(key, v)
             except AttributeError:
                 sys.exit("The key configration for '%s' is wrong" % k)
-
