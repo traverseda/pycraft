@@ -24,6 +24,14 @@ DEFAULT_CONFIG = {
         "down": "LSHIFT",
         "fly": "TAB",
     },
+    "world": {
+        "gravity": 20.0,
+        "player_height": 2,
+        "max_jump_height": 2.0,
+        "terminal_velocity": 50,
+        "walking_speed": 5,
+        "flying_speed": 15,
+    },
 }
 
 
@@ -46,12 +54,9 @@ def test_load_configuration_file():
     Test that we can read and write a config file.
     """
     config = ConfigurationLoader()
-    config_path = config.configuration_file_path
-
-    # Check that there isn't already a config file at this location,
-    # we don't want to overwrite user data!
-    if os.path.exists(config_path):
-        os.rename(config_path, config_path + ".backup")
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    config_path = os.path.join(base_dir, 'tmp-configuration.json')
+    config.configuration_file_path = config_path
 
     # There shouldn't be a config file, so it will write one
     config_dict = config.load_configuration_file()
@@ -64,32 +69,38 @@ def test_load_configuration_file():
     # Now we want to do it all again writing our own config file
     new_config = {
         "window": {
-            "width": 800,
-            "height": 600,
-            "ticks_per_second": 60,
-            "resizeable": True,
-            "exclusive_mouse": True,
+            "width": 813,
+            "height": 2450,
+            "ticks_per_second": 63,
+            "resizeable": False,
+            "exclusive_mouse": False,
         },
         "controls": {
             "forward": "Z",
             "backward": "S",
             "right": "D",
             "left": "Q",
-            "jump": "SPACE",
-            "down": "LSHIFT",
-            "fly": "TAB",
+            "jump": "LSHIFT",
+            "down": "TAB",
+            "fly": "SPACE",
+        },
+        "world": {
+            "gravity": 234.0,
+            "player_height": 123,
+            "max_jump_height": 34.1,
+            "terminal_velocity": 431,
+            "walking_speed": 12,
+            "flying_speed": 34,
         },
     }
+
     with open(config_path, 'w') as f:
-        json.dump(new_config, f)
+        json.dump(new_config, f, indent=4)
     opened_config = config.load_configuration_file()
     assert opened_config == new_config, "Loaded config doesn't match what we wrote"
 
     # Clean up after ourselves
-    if os.path.exists(config_path + ".backup"):
-        os.rename(config_path + ".backup", config_path)
-    else:
-        os.remove(config_path)
+    os.remove(config_path)
 
 
 if __name__ == "__main__":
