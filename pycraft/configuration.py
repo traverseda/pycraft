@@ -33,6 +33,15 @@ class ConfigurationLoader:
         self.game_config["window"]["resizeable"] = True
         self.game_config["window"]["exclusive_mouse"] = True
 
+        # World configuration
+        self.game_config["world"] = dict()
+        self.game_config["world"]["gravity"] = 20.0
+        self.game_config["world"]["player_height"] = 2
+        self.game_config["world"]["max_jump_height"] = 2.0  # About the height of two blocks.
+        self.game_config["world"]["terminal_velocity"] = 50
+        self.game_config["world"]["walking_speed"] = 5
+        self.game_config["world"]["flying_speed"] = 15
+
         # Prepare acess to the configuration file
         home_directory = expanduser("~")
         self.configuration_file_path = home_directory + "/.pycraftconfig.json"
@@ -47,6 +56,10 @@ class ConfigurationLoader:
                 self.game_config["window"]["ticks_per_second"] = json_data["window"]["ticks_per_second"]
                 self.game_config["window"]["resizeable"] = json_data["window"]["resizeable"]
                 self.game_config["window"]["exclusive_mouse"] = json_data["window"]["exclusive_mouse"]
+                self.game_config["window"]["exclusive_mouse"] = json_data["window"]["exclusive_mouse"]
+
+                self.load_extra_configurations(json_data)
+
             except KeyError:
                 # Think about display informations in the screen
                 sys.exit("Exiting! Configuration file format error!")
@@ -57,6 +70,19 @@ class ConfigurationLoader:
                 json.dump(self.game_config, f)
 
         return self.game_config
+
+    def load_extra_configurations(self, json_data):
+        try:
+            # World configuration
+            self.game_config["world"]["gravity"] = json_data["world"]["gravity"]
+            self.game_config["world"]["player_height"] = json_data["world"]["player_height"]
+            self.game_config["world"]["max_jump_height"] = json_data["world"]["max_jump_height"]
+            self.game_config["world"]["terminal_velocity"] = json_data["world"]["terminal_velocity"]
+            self.game_config["world"]["walking_speed"] = json_data["world"]["walking_speed"]
+            self.game_config["world"]["flying_speed"] = json_data["world"]["flying_speed"]
+        except KeyError:
+            # If there is no configuration data, continue with default values
+            pass
 
     def get_configurations(self):
         return self.game_config

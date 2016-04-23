@@ -3,23 +3,21 @@ from collections import OrderedDict
 
 from noise.perlin import SimplexNoise
 from pyglet import image
-from pyglet.gl import glClearColor, glEnable, GL_CULL_FACE, glTexParameteri,  \
-                      GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST,       \
-                      GL_TEXTURE_MAG_FILTER, GL_FOG, glFogfv, GL_FOG_COLOR,   \
-                      GLfloat, glHint, GL_FOG_HINT, GL_DONT_CARE, glFogi,     \
-                      GL_FOG_MODE, GL_LINEAR, glFogf, GL_FOG_START,           \
-                      GL_FOG_END, GL_QUADS
+from pyglet.gl import glClearColor, glEnable, GL_CULL_FACE, glTexParameteri, \
+    GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST, \
+    GL_TEXTURE_MAG_FILTER, GL_FOG, glFogfv, GL_FOG_COLOR, \
+    GLfloat, glHint, GL_FOG_HINT, GL_DONT_CARE, glFogi, \
+    GL_FOG_MODE, GL_LINEAR, glFogf, GL_FOG_START, \
+    GL_FOG_END, GL_QUADS
 from pyglet.graphics import Batch, TextureGroup
-from pyglet.window import mouse
 
 from pycraft.objects import Brick, Grass, Sand, Stone
 from pycraft.util import normalize, sectorize, reverse_sectorize, \
-                         cube_vertices, cube_shade
+    cube_vertices, cube_shade
 from pycraft.shader import Shader
 
 simplex_noise2 = SimplexNoise(256).noise2
 
-TEXTURE_PATH = 'pycraft/objects/textures.png'
 FACES = [
     (0, 1, 0),
     (0, -1, 0),
@@ -35,7 +33,6 @@ class World:
         # A Batch is a collection of vertex lists for batched rendering.
         self.batch = Batch()
         # A TextureGroup manages an OpenGL texture.
-        # self.group = TextureGroup(image.load(TEXTURE_PATH).get_texture())
         self.texture_group = {}
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
@@ -52,7 +49,7 @@ class World:
         self.shader = None
         self.show_hide_queue = OrderedDict()
         self.init_gl()
- #       self._initialize()
+        # self._initialize()
         self.init_shader()
 
     def init_gl(self):
@@ -235,10 +232,10 @@ class World:
         vertex_data = cube_vertices(x, y, z, 0.5)
         shade_data = cube_shade(1, 1, 1, 1)
         texture_data = block.texture
-        if block.id not in self.texture_group:
-            self.texture_group[block.id] = TextureGroup(image.load(block.texture_path).get_texture())
+        if block.identifier not in self.texture_group:
+            self.texture_group[block.identifier] = TextureGroup(image.load(block.texture_path).get_texture())
         self._shown[position] = self.batch.add(
-            24, GL_QUADS, self.texture_group[block.id],
+            24, GL_QUADS, self.texture_group[block.identifier],
             ('v3f/static', vertex_data),
             ('c3f/static', shade_data),
             ('t2f/static', texture_data))
@@ -277,21 +274,19 @@ class World:
             self.generate_sector(sector)
             self.show_sector(sector)
 
-
     def generate_sector(self, sector):
         """Generate blocks within sector using simplex_noise2
         """
         for column in reverse_sectorize(sector):
-            x,z = column
+            x, z = column
             y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
             for y_lvl in range(0 - 2, y_max):
-                self.add_block((x, y_lvl, z), sand, immediate=False)
+                self.add_block((x, y_lvl, z), Sand(), immediate=False)
             else:
-                self.add_block((x, y_lvl, z), grass, immediate=False)
+                self.add_block((x, y_lvl, z), Grass(), immediate=False)
             # add the safety stone floor.
             # don't want anyone falling into the ether.
-            self.add_block((x, 0 - 3, z), stone, immediate=False)
-
+            self.add_block((x, 0 - 3, z), Stone(), immediate=False)
 
     def hide_sector(self, sector):
         """Ensure all blocks in the given sector that should be hidden are
@@ -329,10 +324,10 @@ class World:
 
     def _dequeue(self):
         """Pop the top function from the internal queue and call it."""
-        position,show = self.show_hide_queue.popitem(last=False)
+        position, show = self.show_hide_queue.popitem(last=False)
         shown = position in self._shown
         if show and not shown:
-            self._show_block(position,self.objects[position])
+            self._show_block(position, self.objects[position])
         elif shown and not show:
             self._hide_block(position)
 

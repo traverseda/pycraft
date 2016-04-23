@@ -1,5 +1,7 @@
+# python imports
 import math
 
+# 3rd party imports
 import pyglet.clock
 import pyglet.graphics
 import pyglet.window

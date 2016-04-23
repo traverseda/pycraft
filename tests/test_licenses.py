@@ -20,6 +20,8 @@ def test_licenses(**options):
     '''
     meta_files_to_check = ['PKG-INFO', 'METADATA']
 
+    failed = False
+
     known_ignores = [
         # --------------------------------------------------------------
         # Pip packages added
@@ -126,6 +128,9 @@ def test_licenses(**options):
             license=license
         )
         print(msg, file=file)
-        assert found_license is True
-        if project_name not in known_ignores:
-            assert found_valid is True
+        if found_license is False:
+            failed = True
+        if project_name not in known_ignores and found_valid is False:
+            failed = True
+    assert not failed, "Some licences were not approved or not found"
+
