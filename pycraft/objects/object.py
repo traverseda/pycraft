@@ -1,3 +1,7 @@
 
 class WorldObject:
-    pass
+    unique = False
+    texture = None
+    breakable = False
+    texture_path = None
+    durability = 1

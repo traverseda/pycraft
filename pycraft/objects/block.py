@@ -1,3 +1,7 @@
+# python imports
+import sys
+
+# project imports
 from .object import WorldObject
 from .textures import tex_coords
 
@@ -8,42 +12,55 @@ STONE = tex_coords((2, 1), (2, 1), (2, 1))
 
 
 class Block(WorldObject):
+    texture_path = 'pycraft/objects/textures.png'
+    durability = 1
 
-    unique = False
-    texture = None
-    breakable = False
+    def __init__(self):
+        self.block_duration = self.durability
 
-def get_block(id):
-    if id == "brick":
-        return Brick
-    elif id == "grass":
-        return Grass
-    elif id == "sand":
-        return Sand
-    elif id == "weakstone":
-        return WeakStone
-    elif id == "stone":
-        return Stone
+    def hit_and_destroy(self):
+        if not self.breakable:
+            return False
+        self.block_duration -= 1
+        return self.block_duration == 0
+
+
+def get_block(identifier):
+    try:
+        classname = globals()[identifier.capitalize()]
+        return classname()
+    except KeyError:
+        sys.exit('Exiting! Class {} can\'t be instanciated'.format(identifier))
+
 
 class Brick(Block):
+    identifier = 'Brick'
     texture = BRICK
     breakable = True
+    durability = 10
 
 
 class Grass(Block):
+    identifier = 'Grass'
     texture = GRASS
     breakable = True
+    durability = 5
 
 
 class Sand(Block):
+    identifier = 'Sand'
     texture = SAND
     breakable = True
+    durability = 2
 
 
 class WeakStone(Block):
+    identifier = 'WeakStone'
     texture = STONE
     breakable = True
+    durability = 15
 
 
 class Stone(Block):
+    identifier = 'Stone'
     texture = STONE
