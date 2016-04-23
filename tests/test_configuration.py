@@ -12,12 +12,21 @@ from pycraft.configuration import ConfigurationLoader
 
 DEFAULT_CONFIG = {
     "window": {
+        "width": 800,
+        "height": 600,
         "ticks_per_second": 60,
         "resizeable": True,
-        "width": 800,
         "exclusive_mouse": True,
-        "height": 600
-    }
+    },
+    "controls": {
+        "forward": "W",
+        "backward": "S",
+        "right": "D",
+        "left": "A",
+        "jump": "SPACE",
+        "down": "LSHIFT",
+        "fly": "TAB",
+    },
 }
 
 def test_config_init():
@@ -57,12 +66,21 @@ def test_load_configuration_file():
     # Now we want to do it all again writing our own config file
     new_config = {
         "window": {
-            "ticks_per_second": 2,
-            "resizeable": False,
-            "width": 10,
-            "exclusive_mouse": False,
-            "height": 10
-        }
+            "width": 800,
+            "height": 600,
+            "ticks_per_second": 60,
+            "resizeable": True,
+            "exclusive_mouse": True,
+        },
+        "controls": {
+            "forward": "Z",
+            "backward": "S",
+            "right": "D",
+            "left": "Q",
+            "jump": "SPACE",
+            "down": "LSHIFT",
+            "fly": "TAB",
+        },
     }
     with open(config_path, 'w') as f:
         json.dump(new_config, f)
