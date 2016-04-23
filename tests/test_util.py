@@ -12,11 +12,27 @@ def test_cube_vertices():
     """
     Test cube_vertices function.
     """
-    # After looking through this function, I really don't understand what it is supposed to be
-    # doing. There are many repeated vertices being generated and little organization. I don't
-    # want to mess anything up that other parts of the code are relying on so maybe someone
-    # else should take a look this.
-    # print(util.cube_vertices(0, 10, 20, 1))
+    vertices = util.cube_vertices(0, 10, 20, 0.5)
+
+    # 6 groups of each 12 numbers. those numbers are 4 3-tuple coordinates
+    # making up the 6 sides of a cube
+    groups = [vertices[i:i+12] for i in range(0, 72, 12)]
+    total_coords = set()
+    for i, group in enumerate(groups):
+        coords = [tuple(group[j:j+3]) for j in range(0, 12, 3)]
+        total_coords |= set(coords)
+        assert len(coords) == len(set(coords)), 'Face coords not unique'
+        if i in (0, 1):
+            # top/bottom: y should always be the same
+            assert len(set(c[1] for c in coords)) == 1
+        elif i in (2, 3):
+            # left/right, x should always be the same
+            assert len(set(c[0] for c in coords)) == 1
+        elif i in (4, 5):
+            # front/back, z should always be the same
+            assert len(set(c[2] for c in coords)) == 1
+    assert len(total_coords) == 8, 'A cube has exactly 8 corners'
+
 
 def test_normalize():
     """
@@ -28,6 +44,7 @@ def test_normalize():
     for i, e in zip(norm_pos, expected):
         assert isinstance(i, int), "Returned position not an integer"
         assert i == e, "Returned postion ({}) not what we expected ({})!".format(i, e)
+
 
 def test_sectorize():
     """
