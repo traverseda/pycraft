@@ -1,10 +1,6 @@
 """
 Unit tests for the util.py module.
 """
-import os
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import pycraft.util as util
 
 
@@ -16,10 +12,10 @@ def test_cube_vertices():
 
     # 6 groups of each 12 numbers. those numbers are 4 3-tuple coordinates
     # making up the 6 sides of a cube
-    groups = [vertices[i:i+12] for i in range(0, 72, 12)]
+    groups = [vertices[i:i + 12] for i in range(0, 72, 12)]
     total_coords = set()
     for i, group in enumerate(groups):
-        coords = [tuple(group[j:j+3]) for j in range(0, 12, 3)]
+        coords = [tuple(group[j:j + 3]) for j in range(0, 12, 3)]
         total_coords |= set(coords)
         assert len(coords) == len(set(coords)), 'Face coords not unique'
         if i in (0, 1):
@@ -51,7 +47,6 @@ def test_sectorize():
     Test the sectorize function.
     Currently assumes sector_size is 16, should make this not hard coded!
     """
-    sector_size = 16
     my_pos = [65, 30, 65]
     expected = [4, 0, 4]
     sector = util.sectorize(my_pos)

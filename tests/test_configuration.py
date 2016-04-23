@@ -2,9 +2,6 @@
 Unit tests for the configuration loader module.
 """
 import os
-import sys
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
 import json
 
 from pycraft.configuration import ConfigurationLoader
@@ -28,6 +25,7 @@ DEFAULT_CONFIG = {
         "fly": "TAB",
     },
 }
+
 
 def test_config_init():
     """
@@ -92,9 +90,6 @@ def test_load_configuration_file():
         os.rename(config_path + ".backup", config_path)
     else:
         os.remove(config_path)
-
-
-
 
 
 if __name__ == "__main__":

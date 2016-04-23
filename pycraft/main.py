@@ -28,4 +28,3 @@ def main():
     player = Player(config_data["world"])
     window.set_player(player)
     pyglet.app.run()
-

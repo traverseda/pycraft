@@ -7,6 +7,11 @@ install:
   - pip install -r requirements.txt
   - pip install -r requirements-dev.txt
   - pip install coveralls
+  - pip install flake8
+  - pip install -e .
+
+before_script:
+  - flake8 --ignore=E501,F401 --exclude=docs/ .
 
 script:
   - py.test --cov=. --cov-config .coveragerc .
