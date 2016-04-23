@@ -1,5 +1,5 @@
 import time
-from collections import deque
+from collections import OrderedDict
 
 from noise.perlin import SimplexNoise
 from pyglet import image
@@ -50,9 +50,7 @@ class World:
         self.sectors = {}
 
         self.shader = None
-        # Simple function queue implementation. The queue is populated with
-        # _show_block() and _hide_block() calls
-        self.queue = deque()
+        self.show_hide_queue = OrderedDict()
         self.init_gl()
  #       self._initialize()
         self.init_shader()
@@ -220,7 +218,7 @@ class World:
         if immediate:
             self._show_block(position, texture)
         else:
-            self._enqueue(self._show_block, position, texture)
+            self.show_hide_queue[position] = True
 
     def _show_block(self, position, block):
         """Private implementation of the `show_block()` method.
@@ -258,7 +256,7 @@ class World:
         if immediate:
             self._hide_block(position)
         else:
-            self._enqueue(self._hide_block, position)
+            self.show_hide_queue[position] = False
 
     def _hide_block(self, position):
         """Private implementation of the 'hide_block()` method."""
@@ -327,15 +325,15 @@ class World:
         for sector in hide:
             self.hide_sector(sector)
 
-    def _enqueue(self, func, *args):
-        """Add `func` to the internal queue."""
-        self.queue.append((func, args))
-
     def _dequeue(self):
         """Pop the top function from the internal queue and call it."""
-        func, args = self.queue.popleft()
-        func(*args)
-
+        position,show = self.show_hide_queue.popitem(last=False)
+        shown = position in self._shown
+        if show and not shown:
+            self._show_block(position,self.objects[position])
+        elif shown and not show:
+            self._hide_block(position)
+            
     def process_queue(self, ticks_per_sec):
         """Process the entire queue while taking periodic breaks. This allows
         the game loop to run smoothly. The queue contains calls to
@@ -343,12 +341,12 @@ class World:
         add_block() or remove_block() was called with immediate=False
         """
         start = time.clock()
-        while self.queue and time.clock() - start < 1.0 / ticks_per_sec:
+        while self.show_hide_queue and time.clock() - start < 1.0 / ticks_per_sec:
             self._dequeue()
 
     def process_entire_queue(self):
         """Process the entire queue with no breaks."""
-        while self.queue:
+        while self.show_hide_queue:
             self._dequeue()
 
     def init_shader(self):
