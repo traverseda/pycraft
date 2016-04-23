@@ -2,6 +2,7 @@ from os.path import expanduser
 import sys
 import json
 import collections
+from pyglet.window import key
 
 
 """
@@ -80,3 +81,12 @@ class ConfigurationLoader:
 
     def get_configurations(self):
         return self.game_config
+
+    def check_configuration(self):
+        for k, v in self.game_config['controls'].items():
+            print(k, v)
+            try:
+                getattr(key, v)
+            except AttributeError:
+                sys.exit("The key configration for '%s' is wrong" % k)
+

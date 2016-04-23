@@ -12,6 +12,7 @@ def main():
     # Load configuration file
     config_loader = ConfigurationLoader()
     config_data = config_loader.load_configuration_file()
+    config_loader.check_configuration()
 
     window = Window(
         ticks_ps=config_data["window"]["ticks_per_second"],
@@ -27,3 +28,4 @@ def main():
     player = Player(config_data["world"])
     window.set_player(player)
     pyglet.app.run()
+
