@@ -1,14 +1,20 @@
 import time
-from collections import deque
+from collections import OrderedDict
 
 from noise.perlin import SimplexNoise
 from pyglet import image
-from pyglet.gl import *
+from pyglet.gl import glClearColor, glEnable, GL_CULL_FACE, glTexParameteri,  \
+                      GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST,       \
+                      GL_TEXTURE_MAG_FILTER, GL_FOG, glFogfv, GL_FOG_COLOR,   \
+                      GLfloat, glHint, GL_FOG_HINT, GL_DONT_CARE, glFogi,     \
+                      GL_FOG_MODE, GL_LINEAR, glFogf, GL_FOG_START,           \
+                      GL_FOG_END, GL_QUADS
 from pyglet.graphics import Batch, TextureGroup
 from pyglet.window import mouse
 
-from pycraft.objects import Brick, Stone, Grass
-from pycraft.util import normalize, sectorize, cube_vertices, cube_shade
+from pycraft.objects import Brick, Grass, Sand, Stone
+from pycraft.util import normalize, sectorize, reverse_sectorize, \
+                         cube_vertices, cube_shade
 from pycraft.shader import Shader
 
 simplex_noise2 = SimplexNoise(256).noise2
@@ -44,11 +50,9 @@ class World:
         self.sectors = {}
 
         self.shader = None
-        # Simple function queue implementation. The queue is populated with
-        # _show_block() and _hide_block() calls
-        self.queue = deque()
+        self.show_hide_queue = OrderedDict()
         self.init_gl()
-        self._initialize()
+ #       self._initialize()
         self.init_shader()
 
     def init_gl(self):
@@ -214,7 +218,7 @@ class World:
         if immediate:
             self._show_block(position, texture)
         else:
-            self._enqueue(self._show_block, position, texture)
+            self.show_hide_queue[position] = True
 
     def _show_block(self, position, block):
         """Private implementation of the `show_block()` method.
@@ -254,7 +258,7 @@ class World:
         if immediate:
             self._hide_block(position)
         else:
-            self._enqueue(self._hide_block, position)
+            self.show_hide_queue[position] = False
 
     def _hide_block(self, position):
         """Private implementation of the 'hide_block()` method."""
@@ -264,9 +268,30 @@ class World:
         """Ensure all blocks in the given sector that should be shown are drawn
         to the canvas.
         """
-        for position in self.sectors.get(sector, []):
-            if position not in self.shown and self.exposed(position):
-                self.show_block(position, False)
+        positions = self.sectors.get(sector, [])
+        if positions:
+            for position in positions:
+                if position not in self.shown and self.exposed(position):
+                    self.show_block(position, False)
+        else:
+            self.generate_sector(sector)
+            self.show_sector(sector)
+
+
+    def generate_sector(self, sector):
+        """Generate blocks within sector using simplex_noise2
+        """
+        for column in reverse_sectorize(sector):
+            x,z = column
+            y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
+            for y_lvl in range(0 - 2, y_max):
+                self.add_block((x, y_lvl, z), sand, immediate=False)
+            else:
+                self.add_block((x, y_lvl, z), grass, immediate=False)
+            # add the safety stone floor.
+            # don't want anyone falling into the ether.
+            self.add_block((x, 0 - 3, z), stone, immediate=False)
+
 
     def hide_sector(self, sector):
         """Ensure all blocks in the given sector that should be hidden are
@@ -302,14 +327,14 @@ class World:
         for sector in hide:
             self.hide_sector(sector)
 
-    def _enqueue(self, func, *args):
-        """Add `func` to the internal queue."""
-        self.queue.append((func, args))
-
     def _dequeue(self):
         """Pop the top function from the internal queue and call it."""
-        func, args = self.queue.popleft()
-        func(*args)
+        position,show = self.show_hide_queue.popitem(last=False)
+        shown = position in self._shown
+        if show and not shown:
+            self._show_block(position,self.objects[position])
+        elif shown and not show:
+            self._hide_block(position)
 
     def process_queue(self, ticks_per_sec):
         """Process the entire queue while taking periodic breaks. This allows
@@ -318,12 +343,12 @@ class World:
         add_block() or remove_block() was called with immediate=False
         """
         start = time.clock()
-        while self.queue and time.clock() - start < 1.0 / ticks_per_sec:
+        while self.show_hide_queue and time.clock() - start < 1.0 / ticks_per_sec:
             self._dequeue()
 
     def process_entire_queue(self):
         """Process the entire queue with no breaks."""
-        while self.queue:
+        while self.show_hide_queue:
             self._dequeue()
 
     def init_shader(self):

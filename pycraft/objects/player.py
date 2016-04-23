@@ -56,8 +56,6 @@ class Player(WorldObject):
         self.rotation = (0, 0)
         # Velocity in the y (upward) direction.
         self.dy = 0
-        # A list of blocks the player begins with. Hit num keys to cycle.
-        self.inventory = ["brick", "grass", "sand", "weakstone"]
         # A dict of player blocks with their respective quantities
         self.items = {
             "brick": {
@@ -73,6 +71,9 @@ class Player(WorldObject):
                 "qty": 15
             }
         }
+
+        # this way you only have to modify the dict to add items to the starting inventory
+        self.inventory = list(self.items.keys())
         # The current block the user can place. Hit num keys to cycle.
         self.block = self.inventory[0]
 
