@@ -23,7 +23,7 @@ def test_normalize():
     Test the normalize function.
     """
     my_pos = [3.29, 5.9, 7.001]
-    expected = [3, 5, 7]
+    expected = [3, 6, 7]
     norm_pos = util.normalize(my_pos)
     for i, e in zip(norm_pos, expected):
         assert isinstance(i, int), "Returned position not an integer"
