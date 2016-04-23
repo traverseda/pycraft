@@ -238,6 +238,7 @@ class Window(pyglet.window.Window):
         dt = min(dt, 0.2)
         for _ in range(m):
             self.player.update(dt / m, self.world.objects)
+        print(len(self.world.show_hide_queue))
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the
