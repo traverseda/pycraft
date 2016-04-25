@@ -1,18 +1,16 @@
+from collections import OrderedDict
+
 import pytest
 import yaml
-try:
-    from collections import OrderedDict
-except ImportError:
-    from ordereddict import OrderedDict
 
 
 class SequentialLoader(yaml.Loader):
-    '''
+    """
     Loads and holds data in an ordered dictionary to preserve data sequence
 
     Note that this is probably not necessary for python 3, but it is
     necessary for python 2 and pypy.
-    '''
+    """
     container = OrderedDict
 
     def __init__(self, *args, **kwds):
@@ -48,7 +46,7 @@ class SequentialLoader(yaml.Loader):
                     node.start_mark,
                     'found unacceptable key ({})'.format(e),
                     key_node.start_mark
-                    )
+                )
             value = self.construct_object(value_node, deep=deep)
             mapping[key] = value
         return mapping
@@ -60,8 +58,8 @@ def pytest_addoption(parser):
 
 @pytest.fixture(scope="module")
 def options():
-    '''Captures configuration data from config file and validates that
-    data is available'''
+    """Captures configuration data from config file and validates that
+    data is available"""
     import yaml
     import os
 

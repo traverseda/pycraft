@@ -5,14 +5,14 @@ import math
 import pyglet.clock
 import pyglet.graphics
 import pyglet.window
-from pyglet.gl import *
+from pyglet.gl import *  # noqa
 from pyglet.window import key, mouse
 
 from pycraft.util import sectorize, cube_vertices, normalize
 from pycraft.objects.block import get_block
 from pycraft.configuration import ConfigurationLoader
 
-#TICKS_PER_SEC = 60
+# TICKS_PER_SEC = 60
 # Convenience list of num keys.
 NUMERIC_KEYS = [
     key._1, key._2, key._3, key._4, key._5,
@@ -85,7 +85,8 @@ class Window(pyglet.window.Window):
                 player_x, player_y, player_z = normalize(self.player.position)
                 if previous and self.player.block and \
                     previous != (player_x, player_y, player_z) and \
-                        previous != (player_x, player_y-1, player_z): # make sure the block isn't in the players head or feet
+                        previous != (player_x, player_y - 1, player_z):
+                    # make sure the block isn't in the players head or feet
                     self.world.add_block(previous, get_block(self.player.block))
                     self.player.adjust_inventory(self.player.block)
 
@@ -178,10 +179,10 @@ class Window(pyglet.window.Window):
             self.reticle.delete()
         x, y = self.width // 2, self.height // 2
         n = 10
-        self.reticle = pyglet.graphics.vertex_list(4,
-                                                   ('v2i', (x - n, y, x + n,
-                                                            y, x, y - n, x, y + n))
-                                                   )
+        self.reticle = pyglet.graphics.vertex_list(
+            4,
+            ('v2i', (x - n, y, x + n, y, x, y - n, x, y + n))
+        )
 
     def on_draw(self):
         """Called by pyglet to draw the canvas."""

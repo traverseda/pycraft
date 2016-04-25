@@ -90,7 +90,7 @@ class Player(WorldObject):
 
     def strafe_down(self):
         if self.flying:
-            self.strafe_z -= 1;
+            self.strafe_z -= 1
 
     def jump(self):
         """Increases vertical velocity, if grounded. If flying, moves upwards"""

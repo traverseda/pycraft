@@ -8,7 +8,7 @@ from builtins import bytes
 from _ctypes import POINTER, pointer, byref
 from ctypes import c_char_p, cast, c_char, c_int, create_string_buffer, c_float
 
-from pyglet.gl import *
+from pyglet.gl import *  # noqa
 
 
 class Shader:
@@ -29,7 +29,8 @@ class Shader:
         self.create_shader(vert, GL_VERTEX_SHADER)
         # create the fragment shader
         self.create_shader(frag, GL_FRAGMENT_SHADER)
-        # the geometry shader will be the same, once pyglet supports the extension
+        # the geometry shader will be the same, once pyglet supports the
+        # extension
         # self.createShader(frag, GL_GEOMETRY_SHADER_EXT)
 
         # attempt to link the program
@@ -48,9 +49,9 @@ class Shader:
         for string in strings:
             shaderstrings.append(bytes(string, 'ascii'))
 
-        # convert the source strings into a ctypes pointer-to-char array, and upload them
-        # this is deep, dark, dangerous black magic - don't try stuff like this
-        # at home!
+        # convert the source strings into a ctypes pointer-to-char array, and
+        # upload them this is deep, dark, dangerous black magic - don't try
+        # stuff like this at home!
         src = (c_char_p * count)(*shaderstrings)
 
         glShaderSource(shader, count, cast(
@@ -104,8 +105,8 @@ class Shader:
         glUseProgram(self.handle)
 
     def unbind(self):
-        # unbind whatever program is currently bound - not necessarily this program,
-        # so this should probably be a class method instead
+        # unbind whatever program is currently bound - not necessarily this
+        # program, so this should probably be a class method instead
         glUseProgram(0)
 
     # upload a floating point uniform
