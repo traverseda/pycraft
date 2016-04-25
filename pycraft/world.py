@@ -49,7 +49,6 @@ class World:
         self.shader = None
         self.show_hide_queue = OrderedDict()
         self.init_gl()
-        # self._initialize()
         self.init_shader()
 
     def init_gl(self):
@@ -83,28 +82,6 @@ class World:
         # the denser the fog in the fog range.
         glFogf(GL_FOG_START, 20.0)
         glFogf(GL_FOG_END, 60.0)
-
-    def _initialize(self):
-        """Initialize the world by placing all the blocks."""
-        n = 80  # 1/2 width and height of world
-        s = 1  # step size
-        y = 0  # initial y height
-        for x in range(-n, n + 1, s):
-            for z in range(-n, n + 1, s):
-                # create a layer stone an grass everywhere.
-                self.add_block((x, y - 3, z), Stone(), immediate=False)
-                if x in (-n, n) or z in (-n, n):
-                    # create outer walls.
-                    for dy in range(-2, 3):
-                        self.add_block((x, y + dy, z), Stone(), immediate=False)
-                else:
-                    y_max = int((simplex_noise2(x / 30, z / 30) + 1) * 3)
-                    for y_lvl in range(y - 2, y_max):
-                        if y_lvl < (y_max - 1):
-                            block = Brick()
-                        else:
-                            block = Grass()
-                        self.add_block((x, y_lvl, z), block, immediate=False)
 
     def hit_test(self, position, vector, max_distance=8):
         """Line of sight search from current position. If a block is
