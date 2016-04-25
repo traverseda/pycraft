@@ -1,7 +1,7 @@
+# python imports
 import math
 
-from .block import Brick, Grass, Sand, WeakStone
-from .blocks.water import Water
+# project imports
 from .object import WorldObject
 from ..util import normalize
 
