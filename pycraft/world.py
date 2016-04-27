@@ -119,6 +119,10 @@ class World:
                 return True
         return False
 
+    # 
+    def get_block(self):
+        pass
+
     def add_block(self, position, texture, immediate=True):
         """Add a block with the given `texture` and `position` to the world.
 
