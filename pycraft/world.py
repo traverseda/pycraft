@@ -119,7 +119,7 @@ class World:
                 return True
         return False
 
-    # 
+    # Check gs_running.py
     def get_block(self):
         pass
 
