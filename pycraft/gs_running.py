@@ -15,7 +15,8 @@ NUMERIC_KEYS = [
     key._6, key._7, key._8, key._9, key._0
 ]
 
-class GameStateRunning(GameState):  
+
+class GameStateRunning(GameState):
     def __init__(self, config, height, width):
         self.world = World()
         self.player = Player(config["world"])
@@ -31,7 +32,6 @@ class GameStateRunning(GameState):
             '', font_name='Arial', font_size=18,
             x=width - 10, y=10, anchor_x='right', anchor_y='bottom',
             color=(0, 0, 0, 255))
-
 
     def on_mouse_press(self, x, y, button, modifiers):
         vector = self.player.get_sight_vector()

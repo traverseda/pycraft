@@ -7,6 +7,7 @@ from pycraft.configuration import ConfigurationLoader
 from pycraft.gamestate import GameStateManager, States
 from pycraft.gs_running import GameStateRunning
 
+
 class Window(pyglet.window.Window):
     def __init__(self, ticks_ps, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
@@ -70,7 +71,6 @@ class Window(pyglet.window.Window):
         if self.exclusive:
             self.gamestatemanager.peek().on_mouse_motion(x, y, dx, dy)
 
-
     def on_key_press(self, symbol, modifiers):
         """Called when the player presses a key. See pyglet docs for key
         mappings.
@@ -124,6 +124,6 @@ class Window(pyglet.window.Window):
         ----------
         dt : float
             The change in time since the last call.
-        ticks_per_second: 
+        ticks_per_second:
         """
         self.gamestatemanager.peek().update(dt, self.ticks_per_second)
