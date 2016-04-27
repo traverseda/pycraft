@@ -8,8 +8,6 @@ from pycraft.gamestate import GameStateManager, States
 from pycraft.gs_running import GameStateRunning
 
 class Window(pyglet.window.Window):
-
-
     def __init__(self, ticks_ps, *args, **kwargs):
         super(Window, self).__init__(*args, **kwargs)
         self.ticks_per_second = ticks_ps
@@ -116,7 +114,7 @@ class Window(pyglet.window.Window):
             Pass the current window size
         """
         self.clear()
-        self.gamestatemanager.peek().on_draw(self.get_size())   
+        self.gamestatemanager.peek().on_draw(self.get_size())
 
     def update(self, dt):
         """This method is scheduled to be called repeatedly by the pyglet
