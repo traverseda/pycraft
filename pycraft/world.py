@@ -118,11 +118,7 @@ class World:
             if (x + dx, y + dy, z + dz) not in self.objects:
                 return True
         return False
-
-    # Check gs_running.py
-    def get_block(self):
-        pass
-
+        
     def add_block(self, position, texture, immediate=True):
         """Add a block with the given `texture` and `position` to the world.
 

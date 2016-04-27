@@ -2,6 +2,7 @@
 from pycraft.gamestate import GameState
 from pycraft.world import World
 from pycraft.objects.player import Player
+from pycraft.objects.block import get_block
 from pyglet.window import key, mouse
 import pyglet.graphics
 from pycraft.util import sectorize, cube_vertices, normalize
@@ -44,8 +45,7 @@ class GameStateRunning(GameState):
                 previous != (player_x, player_y, player_z) and \
                     previous != (player_x, player_y - 1, player_z):
                 # make sure the block isn't in the players head or feet
-                # get_block function was defined nowhere
-                self.world.add_block(previous, self.world.get_block(self.player.block))
+                self.world.add_block(previous, get_block(self.player.block))
                 self.player.adjust_inventory(self.player.block)
 
         elif button == pyglet.window.mouse.LEFT and block:
