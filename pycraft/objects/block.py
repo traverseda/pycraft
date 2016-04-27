@@ -27,7 +27,7 @@ class Block(WorldObject):
 
 def get_block(identifier):
     try:
-        classname = globals()[identifier.capitalize()]
+        classname = globals()[identifier]
         return classname()
     except KeyError:
         sys.exit('Exiting! Class {} can\'t be instanciated'.format(identifier))
