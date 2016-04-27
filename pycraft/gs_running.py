@@ -6,7 +6,7 @@ from pyglet.window import key, mouse
 import pyglet.graphics
 from pycraft.util import sectorize, cube_vertices, normalize
 import pyglet.window
-from pyglet.gl import *
+import pyglet.gl as GL
 import math
 
 # Convenience list of num keys.
@@ -107,7 +107,7 @@ class GameStateRunning(GameState):
 
     def on_draw(self, size):
         self.set_3d(size)
-        glColor3d(1, 1, 1)
+        GL.glColor3d(1, 1, 1)
         self.world.start_shader()
         self.world.batch.draw()
         self.world.stop_shader()
@@ -119,29 +119,29 @@ class GameStateRunning(GameState):
     def set_3d(self, size):
         """Configure OpenGL to draw in 3d."""
         width, height = size
-        glEnable(GL_DEPTH_TEST)
-        glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        gluPerspective(65.0, width / float(height), 0.1, 60.0)
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
+        GL.glEnable(GL.GL_DEPTH_TEST)
+        GL.glViewport(0, 0, width, height)
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        GL.gluPerspective(65.0, width / float(height), 0.1, 60.0)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glLoadIdentity()
         x, y = self.player.rotation
-        glRotatef(x, 0, 1, 0)
-        glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
+        GL.glRotatef(x, 0, 1, 0)
+        GL.glRotatef(-y, math.cos(math.radians(x)), 0, math.sin(math.radians(x)))
         x, y, z = self.player.position
-        glTranslatef(-x, -y, -z)
+        GL.glTranslatef(-x, -y, -z)
 
     def set_2d(self, size):
         """Configure OpenGL to draw in 2d."""
         width, height = size
-        glDisable(GL_DEPTH_TEST)
-        glViewport(0, 0, width, height)
-        glMatrixMode(GL_PROJECTION)
-        glLoadIdentity()
-        glOrtho(0, width, 0, height, -1, 1)
-        glMatrixMode(GL_MODELVIEW)
-        glLoadIdentity()
+        GL.glDisable(GL.GL_DEPTH_TEST)
+        GL.glViewport(0, 0, width, height)
+        GL.glMatrixMode(GL.GL_PROJECTION)
+        GL.glLoadIdentity()
+        GL.glOrtho(0, width, 0, height, -1, 1)
+        GL.glMatrixMode(GL.GL_MODELVIEW)
+        GL.glLoadIdentity()
 
     def update(self, dt, ticks_per_second):
         self.world.process_queue(ticks_per_second)
@@ -165,10 +165,10 @@ class GameStateRunning(GameState):
         if block:
             x, y, z = block
             vertex_data = cube_vertices(x, y, z, 0.51)
-            glColor3d(0, 0, 0)
-            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-            pyglet.graphics.draw(24, GL_QUADS, ('v3f/static', vertex_data))
-            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL)
+            GL.glColor3d(0, 0, 0)
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_LINE)
+            pyglet.graphics.draw(24, GL.GL_QUADS, ('v3f/static', vertex_data))
+            GL.glPolygonMode(GL.GL_FRONT_AND_BACK, GL.GL_FILL)
 
     def draw_labels(self):
         """Draw the label in the top left of the screen."""
@@ -182,5 +182,5 @@ class GameStateRunning(GameState):
 
     def draw_reticle(self):
         """Draw the crosshairs in the center of the screen."""
-        glColor3d(0, 0, 0)
-        self.reticle.draw(GL_LINES)
+        GL.glColor3d(0, 0, 0)
+        self.reticle.draw(GL.GL_LINES)
