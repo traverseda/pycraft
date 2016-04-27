@@ -1,7 +1,7 @@
-from .block import Brick, Grass, Sand, Stone, WeakStone
+from .block import Brick, Grass, Sand, Stone, Weakstone
 
 brick = Brick()
 grass = Grass()
 sand = Sand()
-weak_stone = WeakStone()
+weak_stone = Weakstone()
 stone = Stone()

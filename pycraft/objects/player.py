@@ -1,6 +1,6 @@
 import math
 
-from .block import Brick, Grass, Sand, WeakStone
+from .block import Brick, Grass, Sand, Weakstone
 from .object import WorldObject
 from ..util import normalize
 

@@ -54,8 +54,8 @@ class Sand(Block):
     durability = 2
 
 
-class WeakStone(Block):
-    identifier = 'WeakStone'
+class Weakstone(Block):
+    identifier = 'Weakstone'
     texture = STONE
     breakable = True
     durability = 15
