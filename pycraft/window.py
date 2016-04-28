@@ -50,8 +50,6 @@ class Window(pyglet.window.Window):
             mouse button was clicked.
         """
 
-        self.gamestatemanager.peek().on_mouse_press(x, y, button, modifiers)
-
         if self.exclusive:
             self.gamestatemanager.peek().on_mouse_press(x, y, button, modifiers)
         else:
