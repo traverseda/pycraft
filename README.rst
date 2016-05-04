@@ -125,7 +125,7 @@ Attributions
 ------------
 
 The game textures
-`"Piehole" <http://piehole.alexvoelk.de/>`__
+"`Piehole <http://piehole.alexvoelk.de/>`"__
 by
 `Alex Voelk <http://www.alexvoelk.de/>`__
 is licensed under
