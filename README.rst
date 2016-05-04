@@ -118,3 +118,15 @@ Contributing
 ------------
 
 We support and encourage contributions.
+
+
+
+Attributions
+------------
+
+The game textures
+"`Piehole <http://piehole.alexvoelk.de/>`__"
+by
+`Alex Voelk <http://www.alexvoelk.de/>`__
+is licensed under
+`CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>`__
