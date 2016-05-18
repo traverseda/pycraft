@@ -41,12 +41,11 @@ class GameStateRunning(GameState):
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
             player_x, player_y, player_z = normalize(self.player.position)
-            if previous and self.player.block and \
-                previous != (player_x, player_y, player_z) and \
+            if previous and previous != (player_x, player_y, player_z) and \
                     previous != (player_x, player_y - 1, player_z):
                 # make sure the block isn't in the players head or feet
-                self.world.add_block(previous, get_block(self.player.block))
-                self.player.adjust_inventory(self.player.block)
+                self.world.add_block(previous, get_block(self.player.get_block()))
+                # self.player.adjust_inventory(self.player.block)
 
         elif button == pyglet.window.mouse.LEFT and block:
             texture = self.world.objects[block]

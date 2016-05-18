@@ -1,9 +1,3 @@
-# python imports
-
-
-# project imports
-
-
 class Storage:
     def __init__(self):
         self.max_items = 10
@@ -19,6 +13,14 @@ class Storage:
         """
         for x in range(0, self.max_items):
             self.items[x] = dict()
+
+    def get_next_item(self, active=0):
+        if active >= self.max_items:
+            active = 0
+
+        if self.items[active]:
+            return [item for item, qty in self.items[active]]
+        return False
 
     def store_item(self, position, item, quantity=1):
         """
@@ -42,9 +44,9 @@ class Storage:
             self.items[position][item] = quantity
         return True
 
-    def retrieve_item(self, position, quantity=1):
+    def retrieve_item_by_position(self, position, quantity=1):
         """
-        Retrieve an item from the storage
+        Retrieve an item from the storage by position
         Parameters
         ----------
         position
@@ -55,10 +57,43 @@ class Storage:
 
         """
         if position in self.items:
-            items = self.items[position].items()
+            items = self.items[position].copy().items()
             for item, value in items:
-                if value > 1:
-                    self.items[position][item] -= 1
-                    return item
-                self.items[position].clear()
+                if value > quantity:
+                    self.items[position][item] -= quantity
+                else:
+                    quantity = value
+                    self.items[position].clear()
+                return {
+                    "item": item,
+                    "quantity": quantity
+                }
+
+        return False
+
+    def retrieve_item(self, item, quantity=1):
+        """
+        Retrieve an item from the storage
+        Parameters
+        ----------
+        item
+        quantity
+
+        Returns
+        -------
+
+        """
+        items = self.items.copy().items()
+        for key, value in items:
+            if item in value:
+                if value[item] > quantity:
+                    self.items[key][item] -= quantity
+                else:
+                    quantity = value[item]
+                    self.items[key].clear()
+                return {
+                    "item": item,
+                    "quantity": quantity
+                }
+
         return False
