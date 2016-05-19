@@ -12,18 +12,21 @@ class Player(Character):
         # Velocity in the y (upward) direction.
         self.dy = 0
         # A dict of player blocks with their respective quantities
-        inventory = Storage()
-        inventory.store_item(10, 'Brick')
-        inventory.store_item(5, 'Grass')
-        inventory.store_item(15, 'WeakStone')
-        inventory.store_item(20, 'Sand')
-        self.inventory = inventory
+        self.inventory = Storage()
+        self.inventory.store_item(0, 'Brick', 5)
+        self.inventory.store_item(1, 'Grass', 7)
+        self.inventory.store_item(2, 'WeakStone', 10)
+        self.inventory.store_item(3, 'Sand', 5)
 
         self.current_item = 'Brick'
         self.current_item_index = 0
 
     def get_block(self):
-        self.inventory.retrieve_item(self.current_item)
+        item = self.inventory.retrieve_item(self.current_item)
+        self.switch_inventory(self.current_item_index)
+        if isinstance(item, dict):
+            return item['item']
+        return None
 
     def switch_inventory(self, index):
         """
@@ -33,21 +36,6 @@ class Player(Character):
         """
         self.current_item_index = index
         self.current_item = self.inventory.get_next_item(self.current_item_index)
-
-    # def adjust_inventory(self, item, qty=1):
-    #     """
-    #     Adjusts player inventory when a block is placed; updates current
-    #     block if item is no longer available
-    #     :param item:string
-    #     :param qty:integer
-    #     :return:None
-    #     """
-    #     self.items[item]["qty"] -= qty
-    #     if self.items[item]["qty"] == 0:
-    #         self.inventory.remove(item)
-    #         del self.items[item]
-    #         if self.block == item:
-    #             self.block = self.inventory[0] if len(self.inventory) else None
 
     def get_sight_vector(self):
         """Returns the current line of sight vector indicating the direction the

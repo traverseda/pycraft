@@ -15,11 +15,21 @@ class Storage:
             self.items[x] = dict()
 
     def get_next_item(self, active=0):
+        """
+        Retrieve the name of an item in the storage from an index
+        Parameters
+        ----------
+        active
+
+        Returns
+        -------
+
+        """
         if active >= self.max_items:
             active = 0
 
         if self.items[active]:
-            return [item for item, qty in self.items[active]]
+            return [item for item in self.items[active]][0]
         return False
 
     def store_item(self, position, item, quantity=1):
