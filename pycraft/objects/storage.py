@@ -14,7 +14,7 @@ class Storage:
         for x in range(0, self.max_items):
             self.items[x] = dict()
 
-    def get_next_item(self, active=0):
+    def get_item_name(self, active=0):
         """
         Retrieve the name of an item in the storage from an index
         Parameters
@@ -101,6 +101,7 @@ class Storage:
                 else:
                     quantity = value[item]
                     self.items[key].clear()
+
                 return {
                     "item": item,
                     "quantity": quantity

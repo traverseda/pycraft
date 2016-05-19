@@ -35,7 +35,7 @@ class Player(Character):
         :return:None
         """
         self.current_item_index = index
-        self.current_item = self.inventory.get_next_item(self.current_item_index)
+        self.current_item = self.inventory.get_item_name(self.current_item_index)
 
     def get_sight_vector(self):
         """Returns the current line of sight vector indicating the direction the
