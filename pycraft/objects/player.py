@@ -3,6 +3,7 @@ import math
 
 # project imports
 from pycraft.objects.character import Character
+from pycraft.objects.storage import Storage
 
 
 class Player(Character):
@@ -11,25 +12,21 @@ class Player(Character):
         # Velocity in the y (upward) direction.
         self.dy = 0
         # A dict of player blocks with their respective quantities
-        self.items = {
-            "Brick": {
-                "qty": 10
-            },
-            "Grass": {
-                "qty": 20
-            },
-            "Sand": {
-                "qty": 5
-            },
-            "WeakStone": {
-                "qty": 15
-            }
-        }
+        self.inventory = Storage()
+        self.inventory.store_item(0, 'Brick', 5)
+        self.inventory.store_item(1, 'Grass', 7)
+        self.inventory.store_item(2, 'WeakStone', 10)
+        self.inventory.store_item(3, 'Sand', 5)
 
-        # this way you only have to modify the dict to add items to the starting inventory
-        self.inventory = list(self.items.keys())
-        # The current block the user can place. Hit num keys to cycle.
-        self.block = self.inventory[0]
+        self.current_item = 'Brick'
+        self.current_item_index = 0
+
+    def get_block(self):
+        item = self.inventory.retrieve_item(self.current_item)
+        self.switch_inventory(self.current_item_index)
+        if isinstance(item, dict):
+            return item['item']
+        return None
 
     def switch_inventory(self, index):
         """
@@ -37,23 +34,8 @@ class Player(Character):
         :param index:integer
         :return:None
         """
-        if len(self.inventory):
-            self.block = self.inventory[index % len(self.inventory)]
-
-    def adjust_inventory(self, item, qty=1):
-        """
-        Adjusts player inventory when a block is placed; updates current
-        block if item is no longer available
-        :param item:string
-        :param qty:integer
-        :return:None
-        """
-        self.items[item]["qty"] -= qty
-        if self.items[item]["qty"] == 0:
-            self.inventory.remove(item)
-            del self.items[item]
-            if self.block == item:
-                self.block = self.inventory[0] if len(self.inventory) else None
+        self.current_item_index = index
+        self.current_item = self.inventory.get_next_item(self.current_item_index)
 
     def get_sight_vector(self):
         """Returns the current line of sight vector indicating the direction the

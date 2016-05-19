@@ -41,12 +41,11 @@ class GameStateRunning(GameState):
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
             player_x, player_y, player_z = normalize(self.player.position)
-            if previous and self.player.block and \
-                previous != (player_x, player_y, player_z) and \
+            if previous and previous != (player_x, player_y, player_z) and \
                     previous != (player_x, player_y - 1, player_z):
                 # make sure the block isn't in the players head or feet
-                self.world.add_block(previous, get_block(self.player.block))
-                self.player.adjust_inventory(self.player.block)
+                if self.player.current_item:
+                    self.world.add_block(previous, get_block(self.player.get_block()))
 
         elif button == pyglet.window.mouse.LEFT and block:
             texture = self.world.objects[block]
@@ -178,7 +177,7 @@ class GameStateRunning(GameState):
             pyglet.clock.get_fps(), x, y, z,
             len(self.world._shown), len(self.world.objects))
         self.game_info_label.draw()
-        self.current_item_label.text = self.player.block if self.player.block else "No items in inventory"
+        self.current_item_label.text = self.player.current_item if self.player.current_item else "No items in this inventory"
         self.current_item_label.draw()
 
     def draw_reticle(self):
