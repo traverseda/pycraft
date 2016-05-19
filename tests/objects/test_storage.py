@@ -74,8 +74,26 @@ def test_retrieve_item():
         'Item in the position 2 coincide with the item with value 2'
 
 
+def test_next_item():
+    """
+    Test store_item function.
+    """
+    storage_obj = Storage()
+    storage_obj.store_item(0, 'test')
+
+    assert storage_obj.get_item_name() == 'test', 'Retrieve the name of the first item in the storage'
+
+    storage_obj = Storage()
+    storage_obj.store_item(1, 'test')
+
+    assert storage_obj.get_item_name() is False, 'Fails to retrieve the name of the first item in the storage'
+
+    assert storage_obj.get_item_name(10) is False, 'Fails to retrieve the name with and index over max storage'
+
+
 if __name__ == "__main__":
     test_create_storage()
     test_storage_item()
     test_retrieve_item_by_position()
     test_retrieve_item()
+    test_next_item()
