@@ -1,6 +1,7 @@
 
 from pycraft.gamestate import GameState
-from pycraft.world import World
+from pycraft.world.sector import Sector
+from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
 from pyglet.window import key, mouse
@@ -147,21 +148,22 @@ class GameStateRunning(GameState):
         self.world.process_queue(ticks_per_second)
         sector = sectorize(self.player.position)
         if sector != self.world.sector:
-            self.world.change_sectors(self.world.sector, sector)
+            sector_obj = Sector(sector, self.world.area)
+            sector_obj.change_sectors(self.world.sector, sector)
             if self.world.sector is None:
                 self.world.process_entire_queue()
             self.world.sector = sector
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
-            self.player.update(dt / m, self.world.objects)
+            self.player.update(dt / m, self.world.area.get_blocks())
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
         vector = self.player.get_sight_vector()
-        block = self.world.hit_test(self.player.position, vector)[0]
+        block = self.world.area.hit_test(self.player.position, vector)[0]
         if block:
             x, y, z = block
             vertex_data = cube_vertices(x, y, z, 0.51)
@@ -175,7 +177,7 @@ class GameStateRunning(GameState):
         x, y, z = self.player.position
         self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
             pyglet.clock.get_fps(), x, y, z,
-            len(self.world._shown), len(self.world.objects))
+            len(self.world._shown), len(self.world.area.get_blocks()))
         self.game_info_label.draw()
         self.current_item_label.text = self.player.current_item if self.player.current_item else "No items in this inventory"
         self.current_item_label.draw()
