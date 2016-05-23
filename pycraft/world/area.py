@@ -48,7 +48,7 @@ class Area:
         del self.blocks[coords]
 
     def get_block(self, coords):
-        """Show the block at the given `position`. This method assumes the
+        """get the block at the given `position`. This method assumes the
         block has already been added with add_block()
 
         Parameters
@@ -85,7 +85,7 @@ class Area:
         immediate : bool
             Whether or not to show the block immediately.
         """
-        block = self.blocks[coords]
+        block = self.get_block(coords)
         self.world.show_block(coords, block, immediate)
 
     def check_neighbors(self, position):

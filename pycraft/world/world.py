@@ -10,6 +10,7 @@ from pycraft.shader import Shader
 from pycraft.util import cube_vertices, cube_shade
 from pycraft.world.area import Area
 from pycraft.world.opengl import PycraftOpenGL
+from pycraft.world.sector import Sector
 
 simplex_noise2 = SimplexNoise(256).noise2
 
@@ -66,11 +67,12 @@ class World:
         # self.sectors.setdefault(sectorize(position), []).append(position)
         if immediate:
             if self.area.exposed(coords):
-                self.show_block(coords)
+                self.area.show_block(coords, immediate)
                 self.area.check_neighbors(coords)
 
     def show_block(self, coords, block, immediate=False):
-        """Private implementation of the `show_block()` method.
+        """Ensure all blocks that should be shown are drawn
+        to the canvas.
 
         Parameters
         ----------
@@ -82,12 +84,26 @@ class World:
         immediate : bool
             Whether or not to immediately remove the block from the canvas.
         """
+
         if coords in self.shown:
             return
         self.shown[coords] = block
         if not immediate:
             self.show_hide_queue[coords] = True
             return
+        self._show_block(coords, block)
+
+    def _show_block(self, coords, block):
+        """Private implementation of the `show_block()` method.
+
+        Parameters
+        ----------
+        coords : tuple of len 3
+            The (x, y, z) position of the block to show.
+        block : list of len 3
+            The coordinates of the texture squares. Use `tex_coords()` to
+            generate.
+        """
         x, y, z = coords
         vertex_data = cube_vertices(x, y, z, 0.5)
         shade_data = cube_shade(1, 1, 1, 1)
@@ -101,7 +117,8 @@ class World:
             ('t2f/static', texture_data))
 
     def hide_block(self, coords, immediate=True):
-        """Private implementation of the 'hide_block()` method."""
+        """Ensure all blocks that should be hidden are hide
+        from the canvas."""
         if coords not in self.shown:
             return
 
@@ -109,6 +126,10 @@ class World:
         if not immediate:
             self.show_hide_queue[coords] = False
 
+        self._hide_block(coords)
+
+    def _hide_block(self, coords):
+        """Private implementation of the 'hide_block()` method."""
         self._shown.pop(coords).delete()
 
     def _dequeue(self):
@@ -116,9 +137,9 @@ class World:
         coords, show = self.show_hide_queue.popitem(last=False)
         shown = coords in self._shown
         if show and not shown:
-            self.show_block(coords, self.area.get_block(coords))
+            self._show_block(coords, self.area.get_block(coords))
         elif shown and not show:
-            self.hide_block(coords)
+            self._hide_block(coords)
 
     def process_queue(self, ticks_per_sec):
         """Process the entire queue while taking periodic breaks. This allows
@@ -155,4 +176,54 @@ class World:
 
     def add_sector(self, sector, coords):
         self.sector = coords
-        self.sectors.setdefault(coords, []).append(sector)
+        self.sectors[coords] = sector
+        # self.sectors.setdefault(coords, []).append(sector)
+
+    def show_sector(self, coords):
+        """Ensure all blocks in the given sector that should be shown are drawn
+        to the canvas.
+        """
+        sector = self.sectors.get(coords)
+        if sector:
+            for position in sector.blocks:
+                if position not in self.shown and self.area.exposed(position):
+                    self.show_block(position, False)
+        else:
+            sector = Sector(coords, self.area)
+            self.add_sector(sector, coords)
+            self.show_sector(coords)
+
+    def hide_sector(self, coords):
+        """Ensure all blocks in the given sector that should be hidden are
+        removed from the canvas.
+        """
+        sector = self.sectors.get(coords)
+        for position in sector.blocks:
+            if position in self.shown:
+                self.hide_block(position, False)
+
+    def change_sectors(self, before, after):
+        """Move from sector `before` to sector `after`. A sector is a
+        contiguous x, y sub-region of world. Sectors are used to speed up
+        world rendering.
+        """
+        before_set = set()
+        after_set = set()
+        pad = 4
+        for dx in range(-pad, pad + 1):
+            for dy in [0]:  # range(-pad, pad + 1):
+                for dz in range(-pad, pad + 1):
+                    if dx ** 2 + dy ** 2 + dz ** 2 > (pad + 1) ** 2:
+                        continue
+                    if before:
+                        x, y, z = before
+                        before_set.add((x + dx, y + dy, z + dz))
+                    if after:
+                        x, y, z = after
+                        after_set.add((x + dx, y + dy, z + dz))
+        show = after_set - before_set
+        hide = before_set - after_set
+        for sector in show:
+            self.show_sector(sector)
+        for sector in hide:
+            self.hide_sector(sector)

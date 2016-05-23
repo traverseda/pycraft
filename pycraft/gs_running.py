@@ -1,4 +1,3 @@
-
 from pycraft.gamestate import GameState
 from pycraft.world.sector import Sector
 from pycraft.world.world import World
@@ -20,6 +19,7 @@ NUMERIC_KEYS = [
 
 class GameStateRunning(GameState):
     def __init__(self, config, height, width):
+        super(GameStateRunning, self).__init__()
         self.world = World()
         self.player = Player(config["world"])
 
@@ -37,21 +37,21 @@ class GameStateRunning(GameState):
 
     def on_mouse_press(self, x, y, button, modifiers):
         vector = self.player.get_sight_vector()
-        block, previous = self.world.hit_test(self.player.position, vector)
+        block, previous = self.world.area.hit_test(self.player.position, vector)
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
             player_x, player_y, player_z = normalize(self.player.position)
             if previous and previous != (player_x, player_y, player_z) and \
-                    previous != (player_x, player_y - 1, player_z):
+                            previous != (player_x, player_y - 1, player_z):
                 # make sure the block isn't in the players head or feet
                 if self.player.current_item:
                     self.world.add_block(previous, get_block(self.player.get_block()))
 
         elif button == pyglet.window.mouse.LEFT and block:
-            texture = self.world.objects[block]
+            texture = self.world.area.get_block(block)
             if texture.hit_and_destroy():
-                self.world.remove_block(block)
+                self.world.area.remove_block(block)
 
     def on_mouse_motion(self, x, y, dx, dy):
         m = 0.15
@@ -148,8 +148,7 @@ class GameStateRunning(GameState):
         self.world.process_queue(ticks_per_second)
         sector = sectorize(self.player.position)
         if sector != self.world.sector:
-            sector_obj = Sector(sector, self.world.area)
-            sector_obj.change_sectors(self.world.sector, sector)
+            self.world.change_sectors(self.world.sector, sector)
             if self.world.sector is None:
                 self.world.process_entire_queue()
             self.world.sector = sector

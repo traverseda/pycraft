@@ -41,32 +41,6 @@ class Sector:
         """
         del self.blocks[coords]
 
-    def change_sectors(self, before, after):
-        """Move from sector `before` to sector `after`. A sector is a
-        contiguous x, y sub-region of world. Sectors are used to speed up
-        world rendering.
-        """
-        before_set = set()
-        after_set = set()
-        pad = 4
-        for dx in range(-pad, pad + 1):
-            for dy in [0]:  # range(-pad, pad + 1):
-                for dz in range(-pad, pad + 1):
-                    if dx ** 2 + dy ** 2 + dz ** 2 > (pad + 1) ** 2:
-                        continue
-                    if before:
-                        x, y, z = before
-                        before_set.add((x + dx, y + dy, z + dz))
-                    if after:
-                        x, y, z = after
-                        after_set.add((x + dx, y + dy, z + dz))
-        show = after_set - before_set
-        hide = before_set - after_set
-        for sector in show:
-            self.show_sector(sector)
-        for sector in hide:
-            self.hide_sector(sector)
-
     def generate_sector(self, coords):
         """Generate blocks within sector using simplex_noise2
         """
@@ -80,29 +54,3 @@ class Sector:
             # add the safety stone floor.
             # don't want anyone falling into the ether.
             self.add_block((x, 0 - 3, z), Stone())
-
-    def hide_sector(self, sector):
-        """Ensure all blocks in the given sector that should be hidden are
-        removed from the canvas.
-        """
-        for position in self.area.sectors.get(sector, []):
-            if position in self.area.shown:
-                self.area.hide_block(position, False)
-
-    def show_sector(self, world):
-        """Ensure all blocks in the given sector that should be shown are drawn
-        to the canvas.
-        """
-        for coord in self.blocks:
-            if self.area.exposed(coord):
-                self.area.show_block(coord, False)
-        # positions = self.area.sectors.get(sector, [])
-        # if positions:
-        #     for position in positions:
-        #         if position not in self.area.shown and self.area.exposed(position):
-        #             self.area.show_block(position, False)
-        # else:
-        #     self.generate_sector(sector)
-        #     self.show_sector(sector)
-
-
