@@ -19,7 +19,7 @@ The original project had great ideas and implemented really cool things,
 but it was primarily designed around teaching.  This project is intended
 to create a community-driven engine for complicated voxel/roguelike
 games which ultimately can use and extend
-`GURPS <https://en.wikipedia.org/wiki/GURPS>`__
+`GURPS <https://en.wikipedia.org/wiki/GURPS>`__.
 
     The Generic Universal RolePlaying System, or GURPS, is a tabletop
     role-playing game system designed to allow for play in any game
@@ -129,4 +129,4 @@ The game textures
 by
 `Alex Voelk <http://www.alexvoelk.de/>`__
 is licensed under
-`CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>`__
+`CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>`__.
