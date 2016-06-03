@@ -129,4 +129,4 @@ The game textures
 by
 `Alex Voelk <http://www.alexvoelk.de/>`__
 is licensed under
-`CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>`__
+`CC BY 3.0 <https://creativecommons.org/licenses/by/3.0/>`__.
