@@ -27,6 +27,8 @@ games which ultimately can use and extend
 
 This project will be very permissive in accepting pull-requests.
 
+It is currently pre-alpha quality.
+
 
 Screenshot
 ----------
