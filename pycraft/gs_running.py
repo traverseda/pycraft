@@ -1,6 +1,6 @@
-
 from pycraft.gamestate import GameState
-from pycraft.world import World
+from pycraft.world.sector import Sector
+from pycraft.world.world import World
 from pycraft.objects.player import Player
 from pycraft.objects.block import get_block
 from pyglet.window import key, mouse
@@ -19,6 +19,7 @@ NUMERIC_KEYS = [
 
 class GameStateRunning(GameState):
     def __init__(self, config, height, width):
+        super(GameStateRunning, self).__init__()
         self.world = World()
         self.player = Player(config["world"])
 
@@ -36,21 +37,21 @@ class GameStateRunning(GameState):
 
     def on_mouse_press(self, x, y, button, modifiers):
         vector = self.player.get_sight_vector()
-        block, previous = self.world.hit_test(self.player.position, vector)
+        block, previous = self.world.area.hit_test(self.player.position, vector)
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
             player_x, player_y, player_z = normalize(self.player.position)
             if previous and previous != (player_x, player_y, player_z) and \
-                    previous != (player_x, player_y - 1, player_z):
+                            previous != (player_x, player_y - 1, player_z):
                 # make sure the block isn't in the players head or feet
                 if self.player.current_item:
                     self.world.add_block(previous, get_block(self.player.get_block()))
 
         elif button == pyglet.window.mouse.LEFT and block:
-            texture = self.world.objects[block]
+            texture = self.world.area.get_block(block)
             if texture.hit_and_destroy():
-                self.world.remove_block(block)
+                self.world.area.remove_block(block)
 
     def on_mouse_motion(self, x, y, dx, dy):
         m = 0.15
@@ -154,14 +155,14 @@ class GameStateRunning(GameState):
         m = 8
         dt = min(dt, 0.2)
         for _ in range(m):
-            self.player.update(dt / m, self.world.objects)
+            self.player.update(dt / m, self.world.area.get_blocks())
 
     def draw_focused_block(self):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
         vector = self.player.get_sight_vector()
-        block = self.world.hit_test(self.player.position, vector)[0]
+        block = self.world.area.hit_test(self.player.position, vector)[0]
         if block:
             x, y, z = block
             vertex_data = cube_vertices(x, y, z, 0.51)
@@ -175,7 +176,7 @@ class GameStateRunning(GameState):
         x, y, z = self.player.position
         self.game_info_label.text = '%02d (%.2f, %.2f, %.2f) %d / %d' % (
             pyglet.clock.get_fps(), x, y, z,
-            len(self.world._shown), len(self.world.objects))
+            len(self.world._shown), len(self.world.area.get_blocks()))
         self.game_info_label.draw()
         self.current_item_label.text = self.player.current_item if self.player.current_item else "No items in this inventory"
         self.current_item_label.draw()

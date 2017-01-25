@@ -1,8 +1,6 @@
 import pyglet.app
 
 from pycraft.window import Window
-from pycraft.world import World
-from pycraft.objects.player import Player
 from pycraft.configuration import ConfigurationLoader
 
 WINDOW_CAPTION = 'PyCraft'
