@@ -181,7 +181,7 @@ class World:
         self.sectors[coords] = sector
         # self.sectors.setdefault(coords, []).append(sector)
 
-    def show_sector(self, coords):
+    def show_sector(self, coords, immediate=True):
         """Ensure all blocks in the given sector that should be shown are drawn
         to the canvas.
         """
@@ -189,7 +189,7 @@ class World:
         if sector:
             for position in sector.blocks:
                 if position not in self.shown and self.area.exposed(position):
-                    self.show_block(position, False)
+                    self.show_block(position, immediate)
         else:
             sector = Sector(coords, self.area)
             self.add_sector(sector, coords)
@@ -225,7 +225,7 @@ class World:
                         after_set.add((x + dx, y + dy, z + dz))
         show = after_set - before_set
         hide = before_set - after_set
-        for sector in show:
-            self.show_sector(sector)
-        for sector in hide:
-            self.hide_sector(sector)
+        for coords in hide:
+            self.hide_sector(coords)
+        for coords in show:
+            self.show_sector(coords)
