@@ -130,6 +130,8 @@ class World:
 
     def _hide_block(self, coords):
         """Private implementation of the 'hide_block()` method."""
+        if coords not in self._shown:
+            return
         self._shown.pop(coords).delete()
 
     def _dequeue(self):
