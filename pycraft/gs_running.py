@@ -51,7 +51,7 @@ class GameStateRunning(GameState):
         elif button == pyglet.window.mouse.LEFT and block:
             texture = self.world.area.get_block(block)
             if texture.hit_and_destroy():
-                self.world.area.remove_block(block)
+                self.world.remove_block(block)
 
     def on_mouse_motion(self, x, y, dx, dy):
         m = 0.15

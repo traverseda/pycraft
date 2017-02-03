@@ -74,6 +74,20 @@ class World:
                 for element in neighbors['show']:
                     self.show_block(element['coords'], element['block'])
 
+    def remove_block(self, coords):
+        """
+        Remove a block from the world. And shows the neighbors
+        :param coords:
+        :return:
+        """
+        self.area.remove_block(coords)
+        self.hide_block(coords)
+        neighbors = self.area.get_neighbors(coords)
+        for element in neighbors['hide']:
+            self.hide_block(element['coords'])
+        for element in neighbors['show']:
+            self.show_block(element['coords'], element['block'])
+
     def show_block(self, coords, block, immediate=False):
         """Ensure all blocks that should be shown are drawn
         to the canvas.
@@ -237,6 +251,11 @@ class World:
             self.show_sector(coords)
 
     def initial_sector(self, coords):
+        """
+        Creates initial sectors in spiral, to speed up rendering in front of the player
+        :param coords:
+        :return:
+        """
         x, y = 0, 0
         dx, dy = 0, -1
         X = coords[0] + 4
@@ -244,7 +263,6 @@ class World:
         for i in range(max(X, Y) ** 2):
             if (-X / 2 < x <= X / 2) and (-Y / 2 < y <= Y / 2):
                 self.show_sector((x, coords[1], y))
-                # DO STUFF...
             if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
                 dx, dy = -dy, dx  # Corner change direction
             x, y = x + dx, y + dy
