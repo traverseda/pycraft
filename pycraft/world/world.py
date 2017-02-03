@@ -48,7 +48,7 @@ class World:
 
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
-        self.area = Area(self)
+        self.area = Area()
 
     def add_block(self, coords, block, immediate=True):
         """Add a block with the given `texture` and `position` to the world.
@@ -67,8 +67,12 @@ class World:
         # self.sectors.setdefault(sectorize(position), []).append(position)
         if immediate:
             if self.area.exposed(coords):
-                self.area.show_block(coords, immediate)
-                self.area.check_neighbors(coords)
+                self.show_block(coords, block, immediate)
+                neighbors = self.area.get_neighbors(coords)
+                for element in neighbors['hide']:
+                    self.hide_block(element['coords'])
+                for element in neighbors['show']:
+                    self.show_block(element['coords'], element['block'])
 
     def show_block(self, coords, block, immediate=False):
         """Ensure all blocks that should be shown are drawn
@@ -212,6 +216,8 @@ class World:
         before_set = set()
         after_set = set()
         pad = 4
+        if not before:
+            self.initial_sector(after)
         for dx in range(-pad, pad + 1):
             for dy in [0]:  # range(-pad, pad + 1):
                 for dz in range(-pad, pad + 1):
@@ -229,3 +235,16 @@ class World:
             self.hide_sector(coords)
         for coords in show:
             self.show_sector(coords)
+
+    def initial_sector(self, coords):
+        x, y = 0, 0
+        dx, dy = 0, -1
+        X = coords[0] + 4
+        Y = coords[2] + 4
+        for i in range(max(X, Y) ** 2):
+            if (-X / 2 < x <= X / 2) and (-Y / 2 < y <= Y / 2):
+                self.show_sector((x, coords[1], y))
+                # DO STUFF...
+            if x == y or (x < 0 and x == -y) or (x > 0 and x == 1 - y):
+                dx, dy = -dy, dx  # Corner change direction
+            x, y = x + dx, y + dy

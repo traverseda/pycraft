@@ -11,12 +11,10 @@ FACES = [
 
 
 class Area:
-    def __init__(self, world):
+    def __init__(self):
         # A mapping from position to the texture of the block at that position.
         # This defines all the blocks that are currently in the world.
         self.blocks = {}
-
-        self.world = world
 
     def get_blocks(self):
         return self.blocks
@@ -75,47 +73,31 @@ class Area:
                 return True
         return False
 
-    def show_block(self, coords, immediate=True):
-        """Show the block at the given `position`. This method assumes the
-        block has already been added with add_block()
-        Parameters
-        ----------
-        coords : tuple of len 3
-            The (x, y, z) position of the block to show.
-        immediate : bool
-            Whether or not to show the block immediately.
-        """
-        block = self.get_block(coords)
-        self.world.show_block(coords, block, immediate)
-
-    def check_neighbors(self, position):
+    def get_neighbors(self, position):
         """Check all blocks surrounding `position` and ensure their visual
         state is current. This means hiding blocks that are not exposed and
         ensuring that all exposed blocks are shown. Usually used after a block
         is added or removed.
         """
         x, y, z = position
+        neighbors = {
+            'show': list(),
+            'hide': list()
+        }
         for dx, dy, dz in FACES:
             key = (x + dx, y + dy, z + dz)
             if key not in self.blocks:
                 continue
             if self.exposed(key):
-                self.show_block(key)
+                neighbors['show'].append({
+                    'coords': key,
+                    'block': self.get_block(key)
+                })
             else:
-                self.hide_block(key)
-
-    def hide_block(self, coords, immediate=True):
-        """Hide the block at the given `position`. Hiding does not remove the
-        block from the world.
-
-        Parameters
-        ----------
-        coords : tuple of len 3
-            The (x, y, z) position of the block to hide.
-        immediate : bool
-            Whether or not to immediately remove the block from the canvas.
-        """
-        self.world.hide_block(coords, immediate)
+                neighbors['hide'].append({
+                    'coords': key
+                })
+        return neighbors
 
     def hit_test(self, coords, vector, max_distance=8):
         """Line of sight search from current position. If a block is
