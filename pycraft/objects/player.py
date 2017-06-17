@@ -61,7 +61,7 @@ class Player(Character):
 
         Parameters
         ----------
-        blocks : dictionary
+        blocks : dict
             A mapping from position to the texture of a block
         max_distance : int
             How many blocks away to search for a hit.
