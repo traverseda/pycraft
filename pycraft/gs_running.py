@@ -36,19 +36,15 @@ class GameStateRunning(GameState):
             color=(0, 0, 0, 255))
 
     def on_mouse_press(self, x, y, button, modifiers):
-        vector = self.player.get_sight_vector()
-        block, previous = self.world.area.hit_test(self.player.position, vector)
+        block, previous = self.player.hit(self.world.area.blocks)
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
             player_x, player_y, player_z = normalize(self.player.position)
-            if previous and previous != (player_x, player_y, player_z) and \
-                            previous != (player_x, player_y - 1, player_z):
-                # make sure the block isn't in the players head or feet
-                if self.player.current_item:
-                    self.world.add_block(previous, get_block(self.player.get_block()))
+            if block and self.player.current_item:
+                self.world.add_block(previous, get_block(self.player.get_block()))
 
-        elif button == pyglet.window.mouse.LEFT and block:
+        elif button == mouse.LEFT and block:
             texture = self.world.area.get_block(block)
             if texture.hit_and_destroy():
                 self.world.remove_block(block)
@@ -161,8 +157,7 @@ class GameStateRunning(GameState):
         """Draw black edges around the block that is currently under the
         crosshairs.
         """
-        vector = self.player.get_sight_vector()
-        block = self.world.area.hit_test(self.player.position, vector)[0]
+        block = self.player.hit(self.world.area.blocks)[0]
         if block:
             x, y, z = block
             vertex_data = cube_vertices(x, y, z, 0.51)

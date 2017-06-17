@@ -4,6 +4,7 @@ import math
 # project imports
 from pycraft.objects.character import Character
 from pycraft.objects.storage import Storage
+from pycraft.util import normalize
 
 
 class Player(Character):
@@ -52,3 +53,31 @@ class Player(Character):
         dx = math.cos(math.radians(x - 90)) * m
         dz = math.sin(math.radians(x - 90)) * m
         return dx, dy, dz
+
+    def hit(self, blocks, max_distance=8):
+        """Line of sight search from current position. If a block is
+        intersected it is returned, along with the block previously in the line
+        of sight. If no block is found, return None, None.
+
+        Parameters
+        ----------
+        blocks : dictionary
+            A mapping from position to the texture of a block
+        max_distance : int
+            How many blocks away to search for a hit.
+        """
+        m = 8
+        x, y, z = self.position
+        head, feet = normalize((x, y, z)), normalize((x, y - 1, z))
+        dx, dy, dz = self.get_sight_vector()
+        previous = None
+        for _ in range(max_distance * m):
+            key = normalize((x, y, z))
+            if key != previous and key in blocks:
+                if previous == head or previous == feet:
+                    continue
+                # Make sure the block isn't the player's head or feet.
+                return key, previous
+            previous = key
+            x, y, z = x + dx / m, y + dy / m, z + dz / m
+        return None, None
