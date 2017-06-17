@@ -96,3 +96,4 @@ class Area:
                     'coords': key
                 })
         return neighbors
+    
