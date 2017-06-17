@@ -40,7 +40,6 @@ class GameStateRunning(GameState):
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
             # ON OSX, control + left click = right click.
-            player_x, player_y, player_z = normalize(self.player.position)
             if block and self.player.current_item:
                 self.world.add_block(previous, get_block(self.player.get_block()))
 
