@@ -1,5 +1,3 @@
-from pycraft.util import normalize
-
 FACES = [
     (0, 1, 0),
     (0, -1, 0),
@@ -98,29 +96,3 @@ class Area:
                     'coords': key
                 })
         return neighbors
-
-    def hit_test(self, coords, vector, max_distance=8):
-        """Line of sight search from current position. If a block is
-        intersected it is returned, along with the block previously in the line
-        of sight. If no block is found, return None, None.
-
-        Parameters
-        ----------
-        coords : tuple of len 3
-            The (x, y, z) position to check visibility from.
-        vector : tuple of len 3
-            The line of sight vector.
-        max_distance : int
-            How many blocks away to search for a hit.
-        """
-        m = 8
-        x, y, z = coords
-        dx, dy, dz = vector
-        previous = None
-        for _ in range(max_distance * m):
-            key = normalize((x, y, z))
-            if key != previous and key in self.blocks:
-                return key, previous
-            previous = key
-            x, y, z = x + dx / m, y + dy / m, z + dz / m
-        return None, None
