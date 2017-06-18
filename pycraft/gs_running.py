@@ -36,17 +36,19 @@ class GameStateRunning(GameState):
             color=(0, 0, 0, 255))
 
     def on_mouse_press(self, x, y, button, modifiers):
-        block, previous = self.player.hit(self.world.area.blocks)
         if (button == mouse.RIGHT) or \
                 ((button == mouse.LEFT) and (modifiers & key.MOD_CTRL)):
+            block, previous = self.player.hit(self.world.area.blocks, left=False)
             # ON OSX, control + left click = right click.
             if block and self.player.current_item:
                 self.world.add_block(previous, get_block(self.player.get_block()))
 
-        elif button == mouse.LEFT and block:
-            texture = self.world.area.get_block(block)
-            if texture.hit_and_destroy():
-                self.world.remove_block(block)
+        elif button == mouse.LEFT:
+            block = self.player.hit(self.world.area.blocks)[0]
+            if block:
+                texture = self.world.area.get_block(block)
+                if texture.hit_and_destroy():
+                    self.world.remove_block(block)
 
     def on_mouse_motion(self, x, y, dx, dy):
         m = 0.15
@@ -104,7 +106,7 @@ class GameStateRunning(GameState):
     def on_draw(self, size):
         self.set_3d(size)
         GL.glColor3d(1, 1, 1)
-        self.world.start_shader()
+        # self.world.start_shader()
         self.world.batch.draw()
         self.world.stop_shader()
         self.draw_focused_block()
