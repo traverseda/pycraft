@@ -17,11 +17,11 @@ Motivation
 
 Python is somewhat poorly suited for game development. However it is well suited
 to data-science. A lot of our tasks, working with large voxels sets, strongly resemble
-the kind of problems you encounter in machine learning.
+the kind of problems you encounter in data science.
 
 The big advantage comes from limiting "real-time" state. By not relying on anything having to
 happen *now*, we can do more complicated computation. At the low-end, that means we can
-implement much more complicated occluding algorithms, and draw more complicated scenes.
+implement much more complicated occluding algorithms, and thus draw more complicated scenes.
 
 This kind of split could also be used to run more complicated types of operations, like
 a cellular automata crudely simulating things like plant growth or water.
