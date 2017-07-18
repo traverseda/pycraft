@@ -15,17 +15,21 @@ repo <https://github.com/fogleman/Minecraft>`_.
 Motivation
 ----------
 
-The original project had great ideas and implemented really cool things,
-but it was primarily designed around teaching.  This project is intended
-to create a community-driven engine for complicated voxel/roguelike
-games which ultimately can use and extend
-`GURPS <https://en.wikipedia.org/wiki/GURPS>`__.
+Python is somewhat poorly suited for game development. However it is well suited
+to data-science. A lot of our tasks, working with large voxels sets, strongly resemble
+the kind of problems you encounter in machine learning.
 
-    The Generic Universal RolePlaying System, or GURPS, is a tabletop
-    role-playing game system designed to allow for play in any game
-    setting.
+The big advantage comes from limiting "real-time" state. By not relying on anything having to
+happen *now*, we can do more complicated computation. At the low-end, that means we can
+implement much more complicated occluding algorithms, and draw more complicated scenes.
 
-This project will be very permissive in accepting pull-requests.
+This kind of split could also be used to run more complicated types of operations, like
+a cellular automata crudely simulating things like plant growth or water.
+
+When possible, we would prefer to "scale-out". We don't care about outright efficiency too much,
+rather we care that our solutions can work for very large or very complicated operations.
+The exact opposite of "typical" game development methodology, which would prefer solutions that
+"scale-up", solutions that a very fast for the type of data they expect to deal with.
 
 It is currently pre-alpha quality.
 
